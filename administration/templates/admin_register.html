@@ -4,15 +4,15 @@
 
 {% block content %}
 
-<div id="content-box">
+<div class="content-box">
 
-  <h1 id="content-title">Cadastrar Administrador</h1>
+  <h1 class="content-title">Cadastrar Administrador</h1>
 
-  <form action="/admin_register/" method="post">
+  <form action="/administracao/admin_register/" method="post">
     {% csrf_token %}
 
     {% for error in form.username.errors %}
-    <p style="color: red">{{ error }}</p>
+    <p class="red-text">{{ error }}</p>
     {% endfor %}
     <div class="input-box">
       <input name="username" type="text" required>
@@ -20,7 +20,7 @@
     </div>
 
     {% for error in form.password1.errors %}
-    <p style="color: red">{{ error }}</p>
+    <p class="red-text">{{ error }}</p>
     {% endfor %}
     <div class="input-box">
       <input name="password1" type="password" required>
@@ -28,7 +28,7 @@
     </div>
 
     {% for error in form.password2.errors %}
-    <p style="color: red">{{ error }}</p>
+    <p class="red-text">{{ error }}</p>
     {% endfor %}
     <div class="input-box">
       <input name="password2" type="password" required>
