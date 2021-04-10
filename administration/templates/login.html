@@ -6,7 +6,7 @@
 
 <div class="content-box">
   <h1 class="content-title">Login</h1>
-  <form action="/login/" method="post">
+  <form action="/administracao/login/" method="post">
     {% csrf_token %}
 
     {% for error in form.username.errors %}

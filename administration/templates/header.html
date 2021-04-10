@@ -5,6 +5,7 @@
     <h2 class="title">Projeto Kokama</h1>
   </div>
 
+  {% if request.user.is_superuser %}
   <nav class="top-navbar">
     <ul>
       <li>
@@ -18,11 +19,12 @@
         </a>
       </li>
       <li>
-        <a href="/admin/">
-          Admin
+        <a href="/administracao/logout/">
+          Sair
         </a>
       </li>
     </ul>
   </nav>
+  {% endif %}
 
 </div>

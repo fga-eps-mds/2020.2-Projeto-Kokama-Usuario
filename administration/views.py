@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login as django_login
+from django.contrib.auth import logout as django_logout
 from django.views.decorators.http import require_http_methods
 
 
@@ -35,16 +36,17 @@ def login(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=raw_password)
-            django_login(request, user)
             if user.is_superuser:
+                django_login(request, user)
                 return redirect('/traducao/lista_de_palavras/')
-            else:
-                return redirect('/dicionario/')
     else:
-        if request.user.is_authenticated:
-            if request.user.is_superuser:
+        if request.user.is_authenticated and request.user.is_superuser:
                 return redirect('/traducao/lista_de_palavras/')
-            else:
-                return redirect('/dicionario/')
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
+
+@require_http_methods(["GET"])
+def logout(request):
+    django_logout(request)
+    form = AuthenticationForm()
+    return redirect('/administracao/login/')
