@@ -5,26 +5,26 @@ from django.core.validators import RegexValidator
 
 class PhraseForm(forms.Form):
     phrase_kokama = forms.RegexField(
-        label='phrase_kokama', 
+        label='', 
         regex='.*<.+>.*',
         error_messages={'invalid': ("A frase deve conter uma palavra destacada com <>. Ex: <panara>.")},
     )
     
     phrase_portuguese = forms.RegexField(
-        label='phrase_portuguese', 
+        label='', 
         regex='.*<.+>.*',
         error_messages={'invalid': ("A frase deve conter uma palavra destacada com <>. Ex: <banana>.")},
     )
 
 class WordKokamaForm(forms.Form):
     word_kokama = forms.CharField(
-        label='word_kokama',
+        label='',
         error_messages={'required': 'Preencha este campo.'}
     )
 
 class WordPortugueseForm(forms.Form):
     word_portuguese = forms.CharField(
-         label='word_portuguese',
+         label='',
          error_messages={'required': 'Preencha este campo.'}
     )
 
@@ -35,7 +35,7 @@ class PronunciationChoisesForm(forms.Form):
             ("2", "Feminino"),
             ("3", "Masculino"),
         ),
-        label='type_pronunciation',
+        label='',
     )
 
 PhraseFormSet = formset_factory(
