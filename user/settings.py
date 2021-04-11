@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # Apps
     'administration',
+    'translate',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,31 @@
+{% extends 'base_adm.html' %}
+
+{% block title %}Lista de Palavras{% endblock %}
+
+{% block content %}
+
+    <div class='content-box big'>
+
+        <div class='content-top'>
+            <h1 class='content-title'>Lista de Palavras</h1>
+            <a class='button-link' href="/traducao/adicionar_palavra/">Adicionar Palavras</a>
+        </div>
+
+        <div class="word-list">
+            {% for translate in translations %}
+            <div class="word-area">
+                <span class="word"><a href="/traducao/palavra_kokama/{{translate.id}}">{{ translate.word_kokama }} - {{ translate.translations|join:", " }}</a></span>
+                <a href="/traducao/lista_de_palavras/{{translate.id}}/delete" onclick="return confirm('Tem certeza que deseja executar essa operação? Ela não pode ser desfeita!');">
+                    <em class="fas fa-trash"></em>
+                </a>
+            </div>
+            {% empty %}
+            <div class='word-list'>
+                <h3>Não há palavras cadastradas</h3>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock %}

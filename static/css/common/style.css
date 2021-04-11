@@ -70,7 +70,6 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 4;
-  text-align: center;
   align-self: center;
   width: 500px;
   padding: 40px;
@@ -79,6 +78,10 @@ body {
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
   border-radius: 7px;
+}
+
+.big {
+  width: 700px;
 }
 
 .content-title {
@@ -142,8 +145,75 @@ body {
   transition: 0.35s;
 }
 
-.submit-buttom:hover {
+.submit-buttom:hover, .button-link:hover {
   background-color: #ffffff;
   border: 1px solid #f23232;
   color: #000000;
+}
+
+.content-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-link {
+  display: flex;
+  height: 35px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  border: 1px solid #f23232;
+  letter-spacing: 1px;
+  margin: 3px 0;
+  padding: 5px 10px;
+  text-decoration: none;
+  background-color: #f23232;
+  align-items: center;
+  border-radius: 7px;
+  transition: 0.35s;
+}
+
+.word-list {
+  margin-top: 30px;
+}
+
+.word-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  /* height: 40px; */
+  border: 1px dashed #EDEDED;
+}
+
+.word {
+  font-size: 20px;
+  /* float: left; */
+  line-height: 40px;
+  margin-left: 10px;
+}
+
+.word a {
+  padding: 6px 0;
+  text-decoration: none;
+  color: #000000;
+  transition: 0.2s;
+}
+
+.word a:hover {
+  color: #F23232;
+}
+
+.fas.fa-trash {
+  font-weight: 900;
+  cursor: pointer;
+  font-size: 15px;
+  margin-right: 15px;
+  float: right;
+  color: #F23232;
+  align-self: center;
+}
+
+.fas.fa-trash:hover {
+  font-size: 20px;
 }

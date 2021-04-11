@@ -9,3 +9,4 @@ POSTGRES_PORT=5432
 CLOUD_NAME=claudinhoName
 API_KEY=claudinhoApi
 API_SECRET=claudinhoSecret
+TRANSLATE_MICROSERVICE_URL=http://IP:8000

@@ -22,4 +22,7 @@ urlpatterns = [
     path('', login, name ='login'),
     path('admin/', admin.site.urls),
     path('administracao/', include('administration.urls')),
+    path('traducao/', include('translate.urls')),
 ]
+
+# TODO Colocar /admin apenas se for ambiente de desenvolvimento
