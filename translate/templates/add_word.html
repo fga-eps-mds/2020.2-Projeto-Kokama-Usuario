@@ -42,7 +42,7 @@
             e.preventDefault()
 
             let newForm = phraseForm[0].cloneNode(true)
-            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+            let formRegex = RegExp(`phrase-(\\d){1}-`,'g')
 
             phraseFormNum++
             newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${phraseFormNum}-`)
@@ -62,7 +62,7 @@
             e.preventDefault()
 
             let newForm = wordPortuguseForm[0].cloneNode(true)
-            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+            let formRegex = RegExp(`word-portuguese-(\\d){1}-`,'g')
 
             formWordPortugueseNum++
             newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formWordPortugueseNum}-`)
