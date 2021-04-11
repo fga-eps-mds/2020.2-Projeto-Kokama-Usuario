@@ -1,0 +1,74 @@
+{% extends 'base_adm.html' %}
+
+{% block title %}Adicionar Tradução{% endblock %}
+
+{% block content %}
+    <h1>Adicionar Tradução</h1>
+    <form id="form-container" method="POST">
+        {% csrf_token %}
+        {{word_kokama_form}}
+
+        {{pronunciation_choises_form}}
+
+        {{word_portuguses_formset.management_form}}
+        {% for form in word_portuguses_formset %}
+        <div class = "word-portuguese-form">
+            {{form.as_p}}
+        </div>
+        {% endfor %}
+        <button id="add-portuguse-word-form" type="button">Adicionar Nova Palavra Em Português</button>
+    
+        {{phrase_formset.management_form}}
+        {% for form in phrase_formset %}
+        <div class="phrase-form">
+        {{form.as_p}}
+        </div>
+        {% endfor %}
+        <button id="add-phrase-form" type="button">Adicionar Nova Frase</button>
+        <button type="submit">Salvar</button>
+    </form>
+    
+
+    <script>
+        let phraseForm = document.querySelectorAll(".phrase-form")
+        let container = document.querySelector("#form-container")
+        let addPhraseButton = document.querySelector("#add-phrase-form")
+        let totalPhraseForms = document.querySelector("#id_phrase-TOTAL_FORMS")
+
+        let phraseFormNum = phraseForm.length-1
+        addPhraseButton.addEventListener('click', addPhraseForm)
+
+        function addPhraseForm(e){
+            e.preventDefault()
+
+            let newForm = phraseForm[0].cloneNode(true)
+            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+            phraseFormNum++
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${phraseFormNum}-`)
+            container.insertBefore(newForm, addPhraseButton)
+            
+            totalPhraseForms.setAttribute('value', `${phraseFormNum+1}`)
+        }
+
+        let wordPortuguseForm = document.querySelectorAll(".word-portuguese-form")
+        let addWordPortugueseButton = document.querySelector("#add-portuguse-word-form")
+        let totalWordPortugueseForms = document.querySelector("#id_word-portuguese-TOTAL_FORMS")
+        
+        let formWordPortugueseNum = wordPortuguseForm.length-1
+        addWordPortugueseButton.addEventListener('click', addWordPortugueseForm)
+
+        function addWordPortugueseForm(e){
+            e.preventDefault()
+
+            let newForm = wordPortuguseForm[0].cloneNode(true)
+            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+            formWordPortugueseNum++
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formWordPortugueseNum}-`)
+            container.insertBefore(newForm, addWordPortugueseButton)
+            
+            totalWordPortugueseForms.setAttribute('value', `${formWordPortugueseNum+1}`)
+        }
+    </script>
+{% endblock %}
