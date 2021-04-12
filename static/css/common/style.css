@@ -104,16 +104,10 @@ body {
   left: 0;
   letter-spacing: 1px;
   padding: 10px 0;
-  /* font-size: 16px;
-  color: #000000; */
+  font-size: 16px;
+  color: #000000;
   pointer-events: none;
   transition: 0.5s;
-
-
-
-  top: -18px;
-  color: #f23232;
-  font-size: 12px;
 }
 
 .input-box input {
@@ -129,13 +123,13 @@ body {
   background: transparent;
 }
 
-/* .input-box input:focus ~ label,
+.input-box input:focus ~ label,
 .input-box input:valid ~ label {
   top: -18px;
   left: 0;
   color: #f23232;
   font-size: 12px;
-} */
+}
 
 .submit-buttom {
   background: #f23232;
@@ -257,4 +251,18 @@ body {
 
 .right-align{
   text-align: right;
+}
+
+.word-portuguese-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.w350px {
+  width: 350px;
+}
+
+.phrase-form {
+  border: 1px dashed #EDEDED;
 }

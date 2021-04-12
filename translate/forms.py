@@ -39,7 +39,6 @@ class PronunciationChoisesForm(forms.Form):
     )
 
 PhraseFormSet = formset_factory(
-    # Bird, fields=("common_name", "scientific_name"), extra=1
     PhraseForm, 
     extra = 1
 )
