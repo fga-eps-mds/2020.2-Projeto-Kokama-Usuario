@@ -39,7 +39,6 @@ def add_translate(request, id):
             word_portuguses_formset = WordPortugueseFormSet(prefix='word-portuguese')
             word_kokama_form = WordKokamaForm()
             pronunciation_choises_form = PronunciationChoisesForm()
-            # queryset=Bird.objects.none()
             return render(request, 'add_word.html', {
                 'phrase_formset': phrase_formset,
                 'word_portuguses_formset': word_portuguses_formset,
@@ -52,11 +51,15 @@ def add_translate(request, id):
             word_portuguses_formset = WordPortugueseFormSet(prefix='word-portuguese', data=request.POST)
             word_kokama_form = WordKokamaForm(data=request.POST)
             pronunciation_choises_form = PronunciationChoisesForm(data=request.POST)
-            return render(request, 'add_word.html', {
-                'phrase_formset': phrase_formset,
-                'word_portuguses_formset': word_portuguses_formset,
-                'word_kokama_form': word_kokama_form,
-                'pronunciation_choises_form': pronunciation_choises_form
-            })
+            if (phrase_formset.is_valid() and word_portuguses_formset.is_valid() and word_kokama_form.is_valid() and pronunciation_choises_form.is_valid()):
+                pass
+            else:
+                return render(request, 'add_word.html', {
+                    'phrase_formset': phrase_formset,
+                    'word_portuguses_formset': word_portuguses_formset,
+                    'word_kokama_form': word_kokama_form,
+                    'pronunciation_choises_form': pronunciation_choises_form
+                })
+
     else:
         return redirect('/')

@@ -7,11 +7,17 @@
     <h1>Adicionar Tradução</h1>
     <form id="form-container" method="POST">
         {% csrf_token %}
+        {% for error in word_kokama_form.errors %}
+            <p class="red-text">{{ error }}</p>     
+        {% endfor %}
         <div class="input-box">
             {{word_kokama_form}}
             <label>Palavra em Kokama:</label>
         </div>
 
+        {% for error in pronunciation_choises_form.errors %}
+            <p class="red-text">{{ error }}</p>     
+        {% endfor %}
         <div class="drop-down-box">
             <label class="drop-down-text" for="type_pronunciation">
                 Escolha um tipo de pronúncia:
@@ -22,7 +28,7 @@
         {{word_portuguses_formset.management_form}}
         {% for form in word_portuguses_formset %}
         <div class="word-portuguese-form">
-            <div class="input-box w350px">
+            <div class="input-box w350px" id="input-box">
                 {{form}}
                 <label>Palavra em Português:</label>
             </div>
@@ -38,14 +44,20 @@
         {{phrase_formset.management_form}}
         {% for form in phrase_formset %}
         <div class="phrase-form">
-            <div class="input-box w350px">
+            {% for error in form.phrase_kokama.errors %}
+                <p class="red-text" id="erro">{{ error }}</p>     
+            {% endfor %}
+            <div class="input-box w350px" id="input-box">
                 {{form.phrase_kokama}}
                 <label>Frase em Kokama:</label>
             </div>
             <a id="trash-phrase" onclick="ExcludeParent(this)">
                 <em class="fas fa-trash"></em>
             </a>
-            <div class="input-box w350px">
+            {% for error in form.phrase_portuguese.errors %}
+                <p class="red-text" id="erro-2">{{ error }}</p>     
+            {% endfor %}
+            <div class="input-box w350px" id="input-box-2">
                 {{form.phrase_portuguese}}
                 <label>Frase em Português:</label>
             </div>
@@ -64,8 +76,8 @@
     document.querySelector("#id_phrase-0-phrase_kokama").required = true
     document.querySelector("#id_phrase-0-phrase_portuguese").required = true
 
-    document.querySelector("#id_word-portuguese-0-word_portuguese").parentElement.parentElement.children[1].style.display = 'none'
-    document.querySelector("#id_phrase-0-phrase_kokama").parentElement.parentElement.children[1].style.display = 'none'
+    document.querySelector("#id_word-portuguese-0-word_portuguese").parentElement.parentElement.children["trash-portuguese"].style.display = 'none'
+    document.querySelector("#id_phrase-0-phrase_kokama").parentElement.parentElement.children["trash-phrase"].style.display = 'none'
 
     let phraseForm = document.querySelectorAll(".phrase-form")
     let container = document.querySelector("#form-container")
@@ -83,12 +95,15 @@
 
         phraseFormNum++
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `phrase-${phraseFormNum}-`)
+        newForm.children["input-box"].firstElementChild.setAttribute('value', '')
+        newForm.children["input-box-2"].firstElementChild.setAttribute('value', '')
+        newForm.children["erro"]?.remove()
+        newForm.children["erro-2"]?.remove()
         container.insertBefore(newForm, document.querySelector("#box-phrase-form"))
 
         totalPhraseForms.setAttribute('value', `${phraseFormNum + 1}`)
 
-        document.querySelector(`#id_phrase-${phraseFormNum}-phrase_kokama`).parentElement.parentElement.children[1].style.display = 'inline'
-        // document.querySelector(`#id_phrase-${phraseFormNum}-phrase_kokama`).parentElement.parentElement.children[1].addEventListener('click', ExcludeParent)
+        document.querySelector(`#id_phrase-${phraseFormNum}-phrase_kokama`).parentElement.parentElement.children["trash-phrase"].style.display = 'inline'
     }
 
     let wordPortuguseForm = document.querySelectorAll(".word-portuguese-form")
@@ -106,13 +121,12 @@
 
         formWordPortugueseNum++
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `word-portuguese-${formWordPortugueseNum}-`)
-        newForm.firstElementChild.firstElementChild.setAttribute('value', '')
+        newForm.children["input-box"].firstElementChild.setAttribute('value', '')
         container.insertBefore(newForm, document.querySelector("#box-word-portuguese-form"))
 
         totalWordPortugueseForms.setAttribute('value', `${formWordPortugueseNum + 1}`)
 
-        document.querySelector(`#id_word-portuguese-${formWordPortugueseNum}-word_portuguese`).parentElement.parentElement.children[1].style.display = 'inline'
-        // document.querySelector(`#id_word-portuguese-${formWordPortugueseNum}-word_portuguese`).parentElement.parentElement.children[1].addEventListener('click', ExcludeParent)
+        document.querySelector(`#id_word-portuguese-${formWordPortugueseNum}-word_portuguese`).parentElement.parentElement.children["trash-portuguese"].style.display = 'inline'
     }
 
     function ExcludeParent(element) {
@@ -121,7 +135,7 @@
         if (element.id=="trash-portuguese") {
             formWordPortugueseNum--
             totalWordPortugueseForms.setAttribute('value', `${formWordPortugueseNum + 1}`)
-            _id = element.parentElement.firstElementChild.firstElementChild.id.replace('id_word-portuguese-', '').replace('-word_portuguese', '')
+            _id = element.parentElement.children["input-box"].firstElementChild.id.replace('id_word-portuguese-', '').replace('-word_portuguese', '')
             num = formWordPortugueseNum + 1
             for (let i = parseInt(_id); i < num; i++) {
                 document.querySelector(`#id_word-portuguese-${i+1}-word_portuguese`).name = `word-portuguese-${i}-word_portuguese`
@@ -129,7 +143,7 @@
         } else if (element.id=="trash-phrase") {
             phraseFormNum--
             totalPhraseForms.setAttribute('value', `${phraseFormNum + 1}`)
-            _id = element.parentElement.firstElementChild.firstElementChild.id.replace('id_phrase-', '').replace('-phrase_kokama', '')
+            _id = element.parentElement.children["input-box"].firstElementChild.id.replace('id_phrase-', '').replace('-phrase_kokama', '')
             num = phraseFormNum + 1
             for (let i = parseInt(_id); i < num; i++) {
                 document.querySelector(`#id_phrase-${i+1}-phrase_portuguese`).name = `phrase-${i}-phrase_portuguese`
