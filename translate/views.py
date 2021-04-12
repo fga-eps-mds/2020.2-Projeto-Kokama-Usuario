@@ -48,10 +48,15 @@ def add_translate(request, id):
 
             })
         elif request.method == "POST":
-            phrase_formset = PhraseFormSet(prefix='phrase')
-            word_portuguses_formset = WordPortugueseFormSet(prefix='word-portuguese')
-            word_kokama_form = WordKokamaForm()
-            pronunciation_choises_form = PronunciationChoisesForm()
-            return redirect('/traducao/lista_de_palavras')
+            phrase_formset = PhraseFormSet(prefix='phrase', data=request.POST)
+            word_portuguses_formset = WordPortugueseFormSet(prefix='word-portuguese', data=request.POST)
+            word_kokama_form = WordKokamaForm(data=request.POST)
+            pronunciation_choises_form = PronunciationChoisesForm(data=request.POST)
+            return render(request, 'add_word.html', {
+                'phrase_formset': phrase_formset,
+                'word_portuguses_formset': word_portuguses_formset,
+                'word_kokama_form': word_kokama_form,
+                'pronunciation_choises_form': pronunciation_choises_form
+            })
     else:
         return redirect('/')

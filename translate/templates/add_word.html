@@ -106,6 +106,7 @@
 
         formWordPortugueseNum++
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `word-portuguese-${formWordPortugueseNum}-`)
+        newForm.firstElementChild.firstElementChild.setAttribute('value', '')
         container.insertBefore(newForm, document.querySelector("#box-word-portuguese-form"))
 
         totalWordPortugueseForms.setAttribute('value', `${formWordPortugueseNum + 1}`)
