@@ -26,7 +26,7 @@
                 {{form}}
                 <label>Palavra em Português:</label>
             </div>
-            <a>
+            <a id="trash-portuguese">
                 <em class="fas fa-trash"></em>
             </a>
         </div>
@@ -42,7 +42,7 @@
                 {{form.phrase_kokama}}
                 <label>Frase em Kokama:</label>
             </div>
-            <a>
+            <a id="trash-phrase">
                 <em class="fas fa-trash"></em>
             </a>
             <div class="input-box w350px">
@@ -117,7 +117,26 @@
 
     function ExcludeParent(e) {
         e.preventDefault()
-
+        let num = 0
+        let _id = 0
+        if (this.id=="trash-portuguese") {
+            formWordPortugueseNum--
+            totalWordPortugueseForms.setAttribute('value', `${formWordPortugueseNum + 1}`)
+            _id = this.parentElement.firstElementChild.firstElementChild.id.replace('id_word-portuguese-', '').replace('-word_portuguese', '')
+            num = formWordPortugueseNum + 1
+            for (let i = parseInt(_id); i < num; i++) {
+                document.querySelector(`#id_word-portuguese-${i+1}-word_portuguese`).name = `word-portuguese-${i}-word_portuguese`
+            }
+        } else if (this.id=="trash-phrase") {
+            phraseFormNum--
+            totalPhraseForms.setAttribute('value', `${phraseFormNum + 1}`)
+            _id = this.parentElement.firstElementChild.firstElementChild.id.replace('id_phrase-', '').replace('-phrase_kokama', '')
+            num = phraseFormNum + 1
+            for (let i = parseInt(_id); i < num; i++) {
+                document.querySelector(`#id_phrase-${i+1}-phrase_portuguese`).name = `phrase-${i}-phrase_portuguese`
+                document.querySelector(`#id_phrase-${i+1}-phrase_kokama`).name = `phrase-${i}-phrase_kokama`
+            }
+        }
         this.parentElement.remove()
     }
 </script>
