@@ -52,7 +52,10 @@ def add_translate(request, id):
             word_kokama_form = WordKokamaForm(data=request.POST)
             pronunciation_choises_form = PronunciationChoisesForm(data=request.POST)
             if (phrase_formset.is_valid() and word_portuguses_formset.is_valid() and word_kokama_form.is_valid() and pronunciation_choises_form.is_valid()):
-                pass
+                url = '{base_url}/{parameter}/{id}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "adicionar_traducao", id = id)
+                print(request.POST)
+                requests.post(url, data=request.POST)
+                return redirect('/traducao/lista_de_palavras')
             else:
                 return render(request, 'add_word.html', {
                     'phrase_formset': phrase_formset,
