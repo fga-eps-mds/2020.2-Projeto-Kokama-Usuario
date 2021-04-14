@@ -2,21 +2,25 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from decouple import config
 import requests
-from django.http import HttpResponse
-from .forms import PhraseFormSet, WordPortugueseFormSet, WordKokamaForm, PronunciationChoisesForm
+from .forms import WordKokamaForm, WordPortugueseFormSet, PronunciationChoisesForm, PhraseFormSet
+from rest_framework.status import (
+    HTTP_500_INTERNAL_SERVER_ERROR,
+)
 
 # Create your views here.
 @require_http_methods(["GET"])
 def get_word_list(request):
     if request.user.is_superuser:
         url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras")
-
         try:
             response = requests.get(url)
             translations = response.json()
             return render(request, 'word_list.html', {'translations': translations, 'translate_base_url': config('TRANSLATE_MICROSERVICE_URL')})
         except:
-            return HttpResponse('<h1>Erro interno do servidor</h1>', status=500)
+            return Response(
+                {'error': 'Erro interno do servidor'},
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+            )
     else:
         return redirect('/')
 
@@ -34,7 +38,7 @@ def add_translate(request, id):
     if request.user.is_superuser:
         if request.method == "GET":
             if id:
-                url = '{base_url}/{parameter}/{id}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = 'dicionario', id=id)
+                url = '{base_url}/{parameter}/{id}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = 'traducao/dicionario', id=id)
                 data = requests.get(url).json()
                 pronunciation_type = 0
                 if data['pronunciation_type'] == 'feminino':
@@ -80,13 +84,13 @@ def add_translate(request, id):
 
             })
         elif request.method == "POST":
-            print(request.POST)
             phrase_formset = PhraseFormSet(prefix='phrase', data=request.POST)
             word_portugueses_formset = WordPortugueseFormSet(prefix='word-portuguese', data=request.POST)
             word_kokama_form = WordKokamaForm(data=request.POST)
             pronunciation_choises_form = PronunciationChoisesForm(data=request.POST)
-            if (phrase_formset.is_valid() and word_portugueses_formset.is_valid() and word_kokama_form.is_valid() and pronunciation_choises_form.is_valid()):
-                url = '{base_url}/{parameter}/{id}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "adicionar_traducao", id = id)
+            all_forms_are_valid = phrase_formset.is_valid() and word_portugueses_formset.is_valid() and word_kokama_form.is_valid() and pronunciation_choises_form.is_valid()
+            if (all_forms_are_valid):
+                url = '{base_url}/{parameter}/{id}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/adicionar_traducao", id = id)
                 requests.post(url, data=request.POST)
                 return redirect('/traducao/lista_de_palavras')
             else:

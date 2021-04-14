@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.views.decorators.http import require_http_methods
