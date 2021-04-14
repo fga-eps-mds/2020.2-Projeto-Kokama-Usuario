@@ -139,6 +139,7 @@
             num = formWordPortugueseNum + 1
             for (let i = parseInt(_id); i < num; i++) {
                 document.querySelector(`#id_word-portuguese-${i+1}-word_portuguese`).name = `word-portuguese-${i}-word_portuguese`
+                document.querySelector(`#id_word-portuguese-${i+1}-word_portuguese`).id = `id_word-portuguese-${i}-word_portuguese`
             }
         } else if (element.id=="trash-phrase") {
             phraseFormNum--
@@ -147,7 +148,9 @@
             num = phraseFormNum + 1
             for (let i = parseInt(_id); i < num; i++) {
                 document.querySelector(`#id_phrase-${i+1}-phrase_portuguese`).name = `phrase-${i}-phrase_portuguese`
+                document.querySelector(`#id_phrase-${i+1}-phrase_portuguese`).id = `id_phrase-${i}-phrase_portuguese`
                 document.querySelector(`#id_phrase-${i+1}-phrase_kokama`).name = `phrase-${i}-phrase_kokama`
+                document.querySelector(`#id_phrase-${i+1}-phrase_kokama`).id = `id_phrase-${i}-phrase_kokama`
             }
         }
         element.parentElement.remove()
