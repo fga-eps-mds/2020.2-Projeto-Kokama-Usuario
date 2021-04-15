@@ -297,3 +297,38 @@ body {
   font-size: 14px;
   color:rgb(0,0,0);
 }
+
+.search-area, .search-button {
+  height: 30px;
+  border-radius: 5px;
+  border: 1.5px solid #333;
+}
+
+.search-area {
+  outline: none;
+  width: 85px;
+  padding-left: 10px;
+  padding-top: 1.5px;
+  transition: 0.40s;
+}
+
+.search-area:focus {
+  height: 30px;
+  width: 300px;
+  border-radius: 5px;
+  border: 1.5px solid #F23232;
+}
+
+.search-button {
+  justify-content: center;
+  cursor: pointer;
+  border-color: #F23232;
+  background-color: #F23232;
+  color: #FFF;
+}
+
+.search-button:hover {
+  background-color: #ffffff;
+  color: #000000;
+  transition: 0.30s;
+}

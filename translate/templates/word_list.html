@@ -11,12 +11,12 @@
             <a class='button-link' href="/traducao/adicionar_traducao/">Adicionar Palavras</a>
         </div>
 
-        <div>
-            <form action="{% url 'get_word_list' %}">
-                <input type="search" name="search" label="Search" placeholder="Pesquisar">
-                <button type="submit">Pesquisar</button>
-            </form>
-        </div>
+        <form action="{% url 'get_word_list' %}">
+            <input class="search-area" type="search" name="search" label="Search" placeholder="Pesquisar">
+            <button class="search-button" type="submit">
+                <em class="fas fa-search"></em>
+            </button>
+        </form>
 
         <div class="word-list">
             {% for translate in page %}

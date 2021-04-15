@@ -21,7 +21,7 @@ def get_word_list(request):
             response = requests.get(url)
             translations = response.json()
             search_list = []
-            if search_query:
+            if search_query != '':
                 for translate in translations:
                     # Transformar em função e tratar palavras parecidas
                     if (translate['word_kokama'] == search_query
