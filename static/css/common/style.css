@@ -306,7 +306,6 @@ body {
 
 .search-area {
   outline: none;
-  width: 85px;
   padding-left: 10px;
   padding-top: 1.5px;
   transition: 0.40s;
@@ -314,7 +313,6 @@ body {
 
 .search-area:focus {
   height: 30px;
-  width: 300px;
   border-radius: 5px;
   border: 1.5px solid #F23232;
 }

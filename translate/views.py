@@ -17,15 +17,15 @@ def get_word_list(request):
     if request.user.is_superuser:
         url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras")
         try:
-            search_query = request.GET.get('search', '')
+            search_query = request.GET.get('search', '').lower()
             response = requests.get(url)
             translations = response.json()
             search_list = []
             if search_query != '':
                 for translate in translations:
                     # Transformar em função e tratar palavras parecidas
-                    if (translate['word_kokama'] == search_query
-                    or search_query in translate['translations']):
+                    if (translate['word_kokama'].lower() == search_query
+                    or search_query in [word.lower() for word in translate['translations']]):
                         search_list.append(translate)
                 translations = search_list.copy()
 
