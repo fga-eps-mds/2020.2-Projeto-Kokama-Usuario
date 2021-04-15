@@ -11,6 +11,13 @@
             <a class='button-link' href="/traducao/adicionar_traducao/">Adicionar Palavras</a>
         </div>
 
+        <div>
+            <form action="{% url 'get_word_list' %}">
+                <input type="search" name="search" label="Search" placeholder="Pesquisar">
+                <button type="submit">Pesquisar</button>
+            </form>
+        </div>
+
         <div class="word-list">
             {% for translate in page %}
             <div class="word-area">
@@ -28,7 +35,6 @@
 
         <div>
 
-        
         {% if page.has_next %}
         <a class="navigate-page" href="{% url 'get_word_list' %}?page={{page.next_page_number}}">
             <em class="fas fa-arrow-right"></em>
@@ -39,7 +45,6 @@
         </a>
         {% endif %}
         <p class="page"> {{ page.number }} / {{ num_pages }} </p>
-        
         {% if page.has_previous %}
         <a class="navigate-page" href="{% url 'get_word_list' %}?page={{page.previous_page_number}}">
             <em class="fas fa-arrow-left"></em>

@@ -9,7 +9,7 @@ from rest_framework.status import (
 from rest_framework.response import Response
 from django.core.paginator import Paginator
 
-word_per_page = 2
+word_per_page = 25
 
 # Create your views here.
 @require_http_methods(["GET"])
@@ -17,15 +17,25 @@ def get_word_list(request):
     if request.user.is_superuser:
         url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras")
         try:
+            search_query = request.GET.get('search', '')
             response = requests.get(url)
             translations = response.json()
+            search_list = []
+            if search_query:
+                for translate in translations:
+                    # Transformar em função e tratar palavras parecidas
+                    if (translate['word_kokama'] == search_query
+                    or search_query in translate['translations']):
+                        search_list.append(translate)
+                translations = search_list.copy()
+
             p = Paginator(translations, word_per_page, allow_empty_first_page=True)
             try:
                 page_num = request.GET.get('page')
                 page = p.get_page(page_num)
             except:
                 page = p.page(1)
-            return render(request, 'word_list.html', {'page': page, 'num_pages': p.num_pages, 'translate_base_url': config('TRANSLATE_MICROSERVICE_URL')})
+            return render(request, 'word_list.html', {'page': page, 'num_pages': p.num_pages, 'search_query': search_query, 'translate_base_url': config('TRANSLATE_MICROSERVICE_URL')})
         except:
             return Response(
                 {'error': 'Erro interno do servidor'},
