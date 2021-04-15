@@ -12,7 +12,7 @@
         </div>
 
         <div class="word-list">
-            {% for translate in translations %}
+            {% for translate in page %}
             <div class="word-area">
                 <span class="word"><a href="/traducao/adicionar_traducao/{{translate.id}}">{{ translate.word_kokama }} - {{ translate.translations|join:", " }}</a></span>
                 <a href="/traducao/lista_de_palavras/{{translate.id}}/delete" onclick="return confirm('Tem certeza que deseja executar essa operação? Ela não pode ser desfeita!');">
@@ -25,6 +25,30 @@
             </div>
             {% endfor %}
         </div>
+
+        <div>
+
+        
+        {% if page.has_next %}
+        <a class="navigate-page" href="{% url 'get_word_list' %}?page={{page.next_page_number}}">
+            <em class="fas fa-arrow-right"></em>
+        </a>
+        {% else %}
+        <a class="navigate-page" href="">
+            <em class="fas fa-arrow-right"></em>
+        </a>
+        {% endif %}
+        <p class="page"> {{ page.number }} / {{ num_pages }} </p>
+        
+        {% if page.has_previous %}
+        <a class="navigate-page" href="{% url 'get_word_list' %}?page={{page.previous_page_number}}">
+            <em class="fas fa-arrow-left"></em>
+        </a>
+        {% else %}
+        <a class="navigate-page" href="">
+            <em class="fas fa-arrow-left"></em>
+        </a>
+        {% endif %}
 
     </div>
 

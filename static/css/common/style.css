@@ -266,3 +266,34 @@ body {
 .phrase-form {
   border: 1px dashed #EDEDED;
 }
+
+.navigate-page {
+  float: right;
+  background: #f23232;
+  padding: 5px;
+  outline: none;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  margin-top: 40px;
+  text-decoration: none;
+  font-size: 14px;
+  color:rgb(255,255,255);
+  transition: 0.35s;
+}
+
+.navigate-page:hover {
+  background-color: #ffffff;
+  border: 1px solid #f23232;
+  color: #000000;
+}
+
+.page {
+  float: right;
+  outline: none;
+  padding: 6px;
+  margin: 0 15px;
+  margin-top: 40px;
+  font-weight: bold;
+  font-size: 14px;
+  color:rgb(0,0,0);
+}

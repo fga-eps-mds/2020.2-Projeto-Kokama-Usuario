@@ -6,6 +6,10 @@ from .forms import WordKokamaForm, WordPortugueseFormSet, PronunciationChoisesFo
 from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
+from rest_framework.response import Response
+from django.core.paginator import Paginator
+
+word_per_page = 2
 
 # Create your views here.
 @require_http_methods(["GET"])
@@ -15,7 +19,13 @@ def get_word_list(request):
         try:
             response = requests.get(url)
             translations = response.json()
-            return render(request, 'word_list.html', {'translations': translations, 'translate_base_url': config('TRANSLATE_MICROSERVICE_URL')})
+            p = Paginator(translations, word_per_page, allow_empty_first_page=True)
+            try:
+                page_num = request.GET.get('page')
+                page = p.get_page(page_num)
+            except:
+                page = p.page(1)
+            return render(request, 'word_list.html', {'page': page, 'num_pages': p.num_pages, 'translate_base_url': config('TRANSLATE_MICROSERVICE_URL')})
         except:
             return Response(
                 {'error': 'Erro interno do servidor'},
