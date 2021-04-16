@@ -24,9 +24,14 @@ def get_word_list(request):
             if search_query != '':
                 for translate in translations:
                     # Transformar em função e tratar palavras parecidas
-                    if (translate['word_kokama'].lower() == search_query
-                    or search_query in [word.lower() for word in translate['translations']]):
+                    if search_query.lower() in translate['word_kokama'].lower():
                         search_list.append(translate)
+                    else:
+                        for word in translate['translations']:
+                            if search_query.lower() in word.lower():
+                                search_list.append(translate)
+                                break
+                            
                 translations = search_list.copy()
 
             p = Paginator(translations, word_per_page, allow_empty_first_page=True)
@@ -35,7 +40,11 @@ def get_word_list(request):
                 page = p.get_page(page_num)
             except:
                 page = p.page(1)
-            return render(request, 'word_list.html', {'page': page, 'num_pages': p.num_pages, 'search_query': search_query, 'translate_base_url': config('TRANSLATE_MICROSERVICE_URL')})
+            return render(request, 'word_list.html', {
+                'page': page, 
+                'num_pages': p.num_pages, 
+                'search_query': search_query, 
+                'translate_base_url': config('TRANSLATE_MICROSERVICE_URL')})
         except:
             return Response(
                 {'error': 'Erro interno do servidor'},

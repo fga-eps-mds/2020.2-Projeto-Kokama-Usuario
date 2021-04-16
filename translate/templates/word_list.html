@@ -12,7 +12,7 @@
         </div>
 
         <form action="{% url 'get_word_list' %}">
-            <input class="search-area" type="search" name="search" label="Search" placeholder="Pesquisar">
+            <input class="search-area" type="search" name="search" label="Search" placeholder="Pesquisar" value={{search_query}}>
             <button class="search-button" type="submit">
                 <em class="fas fa-search"></em>
             </button>
