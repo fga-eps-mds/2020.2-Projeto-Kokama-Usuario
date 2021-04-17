@@ -1,0 +1,31 @@
+{% extends 'base_adm.html' %}
+
+{% block title %}Adicionar História{% endblock %}
+
+{% block content %}
+<div class='content-box big'>
+    <h1>Adicionar História</h1>
+    <form id="form-container" method="POST">
+        {% csrf_token %}
+
+        {% for error in story_form.title.errors %}
+        <p style="color: red">{{ error }}</p>
+        {% endfor %}
+
+        <div class='input-box'>
+            {{ story_form.title }}
+            <label>Título:</label>
+        </div>
+
+        {% for error in story_form.text.errors %}
+        <p style="color: red">{{ error }}</p>
+        {% endfor %}
+        
+        <label>Texto:</label>
+        <div class='input-box'>
+            {{ story_form.text }}
+        </div>
+
+        <button class="submit-buttom" type="submit">Salvar</button>
+</div>
+{% endblock %}

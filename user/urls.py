@@ -23,6 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('administracao/', include('administration.urls')),
     path('traducao/', include('translate.urls')),
+    path('historia/', include('story.urls')),
 ]
-
-# TODO Colocar /admin apenas se for ambiente de desenvolvimento
