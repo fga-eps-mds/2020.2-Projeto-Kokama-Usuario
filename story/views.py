@@ -16,7 +16,6 @@ from django.http import HttpResponse
 stories_per_page = 25
 
 
-
 @require_http_methods(["GET"])
 def list_story(request):
     if request.user.is_superuser:
@@ -61,7 +60,7 @@ def list_story(request):
 @require_http_methods(["GET"])
 def delete_story(request, id):
     if request.user.is_superuser:
-        url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "lista_de_historias", id = id)
+        url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/lista_de_historias", id = id)
         try:
             requests.delete(url)
             return redirect('/historia/lista_de_historias')
@@ -76,6 +75,7 @@ def delete_story(request, id):
 
 @require_http_methods(["GET", "POST"])
 def add_story(request, id):
+    print(id)
     if request.user.is_superuser:
         if request.method == "GET":
             if id:
@@ -85,12 +85,16 @@ def add_story(request, id):
                 story_form = StoryForm(data=story)
             else:
                 story_form = StoryForm()
-            return render(request, 'add_story.html', { 'story_form': story_form })
+            return render(request, 'add_story.html', { 'story_form': story_form, 'id': id })
         elif request.method == "POST":
             story_form = StoryForm(data=request.POST)
             if (story_form.is_valid()):
-                url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/adicionar_historia", id = id)
-                requests.post(url, data=request.POST)
+                if id:
+                    url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/lista_de_historias", id = id)
+                    requests.put(url, data=request.POST)
+                else:
+                    url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/lista_de_historias")
+                    requests.post(url, data=request.POST)
                 return redirect('/historia/lista_de_historias')
             else:
                 return render(request, 'add_story.html', { 'story_form': story_form })

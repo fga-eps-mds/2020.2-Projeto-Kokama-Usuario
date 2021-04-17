@@ -11,6 +11,7 @@ from django.core.paginator import Paginator
 
 word_per_page = 25
 
+
 # Create your views here.
 @require_http_methods(["GET"])
 def get_word_list(request):
