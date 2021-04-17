@@ -5,7 +5,7 @@
 {% block content %}
 <div class='content-box big'>
     <h1>Adicionar História</h1>
-    <form id="form-container" method="POST">
+    <form id="form-container" action="/historia/adicionar_historia/" method="POST">
         {% csrf_token %}
 
         {% for error in story_form.title.errors %}

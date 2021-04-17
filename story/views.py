@@ -31,7 +31,7 @@ def list_story(request):
                     if search_query.lower() in story['title'].lower():
                         search_list.append(story)
                     else:
-                        for word in story['text']:
+                        for word in story['text'].split(",.?!;()"):
                             if search_query.lower() in word.lower():
                                 search_list.append(story)
                                 break
@@ -74,31 +74,26 @@ def delete_story(request, id):
         return redirect('/')
 
 
-@api_view(["GET", "POST"])
+@require_http_methods(["GET", "POST"])
 def add_story(request, id):
     if request.user.is_superuser:
-        try:
-            if request.method == "GET":
-                if id:
-                    url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historia/lista_de_historias', id=id)
-                    response = requests.get(url)
-                    story = response.json()
-                    story_form = StoryForm(data=story)
-                else:
-                    story_form = StoryForm()
-                return render({ 'story_form': story_form }, template_name="add_story.html")
-            elif request.method == "POST":
-                story_form = StoryForm(data=request.POST)
-                if (story_form.is_valid()):
-                    url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/adicionar_historia", id = id)
-                    requests.post(url, data=request.POST)
-                    return redirect('historia/lista_de_historias')
-                else:
-                    return render(request, 'add_story.html', { 'story_form': story_form })
-        except:
-            return Response(
-                {'error': 'Erro interno do servidor'},
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+        if request.method == "GET":
+            if id:
+                url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historia/lista_de_historias', id=id)
+                response = requests.get(url)
+                story = response.json()
+                story_form = StoryForm(data=story)
+            else:
+                story_form = StoryForm()
+            return render(request, 'add_story.html', { 'story_form': story_form })
+        elif request.method == "POST":
+            story_form = StoryForm(data=request.POST)
+            if (story_form.is_valid()):
+                url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/adicionar_historia", id = id)
+                requests.post(url, data=request.POST)
+                return redirect('/historia/lista_de_historias')
+            else:
+                return render(request, 'add_story.html', { 'story_form': story_form })
+
     else:
         return redirect('/')
