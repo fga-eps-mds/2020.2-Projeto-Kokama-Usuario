@@ -7,6 +7,7 @@ from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 from rest_framework.response import Response
+from django.http import HttpResponse
 from django.core.paginator import Paginator
 
 word_per_page = 25
@@ -47,8 +48,8 @@ def get_word_list(request):
                 'search_query': search_query, 
                 'translate_base_url': config('TRANSLATE_MICROSERVICE_URL')})
         except:
-            return Response(
-                {'error': 'Erro interno do servidor'},
+            return HttpResponse(
+                'Erro interno do servidor',
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
     else:
@@ -62,8 +63,8 @@ def delete_translate(request, id):
             requests.delete(url)
             return redirect('/traducao/lista_de_palavras')
         except:
-            return Response(
-                {'error': 'Erro interno do servidor'},
+            return HttpResponse(
+                'Erro interno do servidor',
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
     else:
@@ -138,8 +139,8 @@ def add_translate(request, id):
                         'pronunciation_choises_form': pronunciation_choises_form
                     })
         except:
-            return Response(
-                {'error': 'Erro interno do servidor'},
+            return HttpResponse(
+                'Erro interno do servidor',
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
     else:
