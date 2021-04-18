@@ -14,6 +14,20 @@ WORDS_PER_PAGE = 25
 SERVER_ERROR = 'Erro interno do servidor'
 URL = '{base_url}/{parameter}/{id}'
 
+
+def get_search_query(match, query_list):
+    search_list = []
+    for translate in query_list:
+        if match.lower() in translate['word_kokama'].lower():
+            search_list.append(translate)
+        else:
+            for word in translate['translations']:
+                if match.lower() in word.lower():
+                    search_list.append(translate)
+                    break
+    return search_list
+
+
 # Create your views here.
 @require_http_methods(["GET"])
 def get_word_list(request):
@@ -23,18 +37,8 @@ def get_word_list(request):
             search_query = request.GET.get('search', '').lower()
             response = requests.get(url)
             translations = response.json()
-            search_list = []
             if search_query != '':
-                for translate in translations:
-                    # Transformar em função e tratar palavras parecidas
-                    if search_query.lower() in translate['word_kokama'].lower():
-                        search_list.append(translate)
-                    else:
-                        for word in translate['translations']:
-                            if search_query.lower() in word.lower():
-                                search_list.append(translate)
-                                break
-                            
+                search_list = get_search_query(search_query, translations)                                 
                 translations = search_list.copy()
 
             p = Paginator(translations, WORDS_PER_PAGE, allow_empty_first_page=True)
