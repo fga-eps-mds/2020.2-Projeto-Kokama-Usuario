@@ -10,8 +10,9 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 
-word_per_page = 25
-
+WORDS_PER_PAGE = 25
+SERVER_ERROR = 'Erro interno do servidor'
+URL = '{base_url}/{parameter}/{id}'
 
 # Create your views here.
 @require_http_methods(["GET"])
@@ -36,20 +37,20 @@ def get_word_list(request):
                             
                 translations = search_list.copy()
 
-            p = Paginator(translations, word_per_page, allow_empty_first_page=True)
+            p = Paginator(translations, WORDS_PER_PAGE, allow_empty_first_page=True)
             try:
                 page_num = request.GET.get('page')
                 page = p.get_page(page_num)
-            except:
+            except Exception:
                 page = p.page(1)
             return render(request, 'word_list.html', {
                 'page': page, 
                 'num_pages': p.num_pages, 
                 'search_query': search_query, 
             })
-        except:
+        except Exception:
             return HttpResponse(
-                'Erro interno do servidor',
+                SERVER_ERROR,
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
     else:
@@ -58,13 +59,13 @@ def get_word_list(request):
 @require_http_methods(["GET"])
 def delete_translate(request, id):
     if request.user.is_superuser:
-        url = '{base_url}/{parameter}/{id}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras", id = id)
+        url = URL.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras", id = id)
         try:
             requests.delete(url)
             return redirect('/traducao/lista_de_palavras')
-        except:
+        except Exception:
             return HttpResponse(
-                'Erro interno do servidor',
+                SERVER_ERROR,
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
     else:
@@ -76,7 +77,7 @@ def add_translate(request, id):
         try:
             if request.method == "GET":
                 if id:
-                    url = '{base_url}/{parameter}/{id}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = 'traducao/dicionario', id=id)
+                    url = URL.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = 'traducao/dicionario', id=id)
                     data = requests.get(url).json()
                     pronunciation_type = 0
                     if data['pronunciation_type'] == 'feminino':
@@ -128,7 +129,7 @@ def add_translate(request, id):
                 pronunciation_choises_form = PronunciationChoisesForm(data=request.POST)
                 all_forms_are_valid = phrase_formset.is_valid() and word_portugueses_formset.is_valid() and word_kokama_form.is_valid() and pronunciation_choises_form.is_valid()
                 if (all_forms_are_valid):
-                    url = '{base_url}/{parameter}/{id}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/adicionar_traducao", id = id)
+                    url = URL.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/adicionar_traducao", id = id)
                     requests.post(url, data=request.POST)
                     return redirect('/traducao/lista_de_palavras')
                 else:
@@ -138,9 +139,9 @@ def add_translate(request, id):
                         'word_kokama_form': word_kokama_form,
                         'pronunciation_choises_form': pronunciation_choises_form
                     })
-        except:
+        except Exception:
             return HttpResponse(
-                'Erro interno do servidor',
+                SERVER_ERROR,
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
     else:

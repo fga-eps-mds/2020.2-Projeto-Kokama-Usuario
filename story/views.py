@@ -12,45 +12,49 @@ from rest_framework.response import Response
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 
+STORY_LIST_URL = 'historia/lista_de_historias'
+SERVER_ERROR = 'Erro interno do servidor'
+STORIES_PER_PAGE = 25
 
-stories_per_page = 25
+def get_search_list(match, query_list):
+    search_list = []
+    for story in query_list:
+        if match.lower() in story['title'].lower():
+            search_list.append(story)
+        else:
+            for word in story['text'].split(",.?!;()"):
+                if match.lower() in word.lower():
+                    search_list.append(story)
+                    break
+    return search_list
 
 
 @require_http_methods(["GET"])
 def list_story(request):
     if request.user.is_superuser:
-        url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/lista_de_historias")
+        url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
         try:
             search_query = request.GET.get('search', '').lower()
             response = requests.get(url)
             stories = response.json()
-            search_list = []
             if search_query != '':
-                for story in stories:
-                    if search_query.lower() in story['title'].lower():
-                        search_list.append(story)
-                    else:
-                        for word in story['text'].split(",.?!;()"):
-                            if search_query.lower() in word.lower():
-                                search_list.append(story)
-                                break
-                            
+                search_list = get_search_list(search_query, stories)     
                 stories = search_list.copy()
 
-            p = Paginator(stories, stories_per_page, allow_empty_first_page=True)
+            p = Paginator(stories, STORIES_PER_PAGE, allow_empty_first_page=True)
             try:
                 page_num = request.GET.get('page')
                 page = p.get_page(page_num)
-            except:
+            except Exception:
                 page = p.page(1)
             return render(request, 'list_story.html', {
                 'page': page, 
                 'num_pages': p.num_pages, 
                 'search_query': search_query, 
             })
-        except:
+        except Exception:
             return HttpResponse(
-                'Erro interno do servidor',
+                SERVER_ERROR,
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
     else:
@@ -60,13 +64,13 @@ def list_story(request):
 @require_http_methods(["GET"])
 def delete_story(request, id):
     if request.user.is_superuser:
-        url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/lista_de_historias", id = id)
+        url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
         try:
             requests.delete(url)
             return redirect('/historia/lista_de_historias')
-        except:
+        except Exception:
             return HttpResponse(
-                'Erro interno do servidor',
+                SERVER_ERROR,
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
     else:
@@ -81,9 +85,9 @@ def add_story(request, id):
                 try:
                     url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historia/lista_de_historias', id=id)
                     response = requests.get(url)
-                except:
+                except Exception:
                     return HttpResponse(
-                        'Erro interno do servidor',
+                        SERVER_ERROR,
                         status=HTTP_500_INTERNAL_SERVER_ERROR,
                     )
                 story = response.json()
@@ -96,14 +100,14 @@ def add_story(request, id):
             if (story_form.is_valid()):
                 try:
                     if id:
-                        url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/lista_de_historias", id = id)
+                        url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
                         requests.put(url, data=request.POST)
                     else:
-                        url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = "historia/lista_de_historias")
+                        url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
                         requests.post(url, data=request.POST)
-                except:
+                except Exception:
                     return HttpResponse(
-                        'Erro interno do servidor',
+                        SERVER_ERROR,
                         status=HTTP_500_INTERNAL_SERVER_ERROR,
                     )
                 return redirect('/historia/lista_de_historias')

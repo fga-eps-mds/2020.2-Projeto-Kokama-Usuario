@@ -12,7 +12,7 @@
         </div>
 
         <form action="{% url 'list_story' %}">
-            <input class="search-area" type="search" name="search" label="Search" placeholder="Pesquisar">
+            <input class="search-area" value={{search_query}} type="search" name="search" label="Search" placeholder="Pesquisar">
             <button class="search-button" type="submit">
                 <em class="fas fa-search"></em>
             </button>

@@ -5,6 +5,7 @@ from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.views.decorators.http import require_http_methods
 
+WORD_LIST_URL = '/traducao/lista_de_palavras/'
 
 @require_http_methods(["GET", "POST"])
 def admin_register(request):
@@ -19,7 +20,7 @@ def admin_register(request):
                 user.is_superuser = True
                 user.is_staff = True
                 user.save()
-                return redirect('/traducao/lista_de_palavras/')
+                return redirect(WORD_LIST_URL)
         else:
             form = UserCreationForm()
         return render(request, 'admin_register.html', {'form': form})
@@ -37,15 +38,14 @@ def login(request):
             user = authenticate(username=username, password=raw_password)
             if user.is_superuser:
                 django_login(request, user)
-                return redirect('/traducao/lista_de_palavras/')
+                return redirect(WORD_LIST_URL)
     else:
         if request.user.is_authenticated and request.user.is_superuser:
-                return redirect('/traducao/lista_de_palavras/')
+                return redirect(WORD_LIST_URL)
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
 @require_http_methods(["GET"])
 def logout(request):
     django_logout(request)
-    form = AuthenticationForm()
     return redirect('/administracao/login/')
