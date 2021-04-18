@@ -2,3 +2,5 @@ __pycache__/
 migrations/
 .vscode
 **.env
+db.sqlite3
+.coverage
