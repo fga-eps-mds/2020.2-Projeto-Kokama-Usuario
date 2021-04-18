@@ -77,42 +77,48 @@ def delete_story(request, id):
         return redirect('/')
 
 
+def add_story_get(request, id):
+    if id:
+        try:
+            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historia/lista_de_historias', id=id)
+            response = requests.get(url)
+        except Exception:
+            return HttpResponse(
+                SERVER_ERROR,
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        story = response.json()
+        story_form = StoryForm(data=story)
+    else:
+        story_form = StoryForm()
+    return render(request, 'add_story.html', { 'story_form': story_form, 'id': id })
+
+def add_story_post(request, id):
+    story_form = StoryForm(data=request.POST)
+    if (story_form.is_valid()):
+        try:
+            if id:
+                url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
+                requests.put(url, data=request.POST)
+            else:
+                url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
+                requests.post(url, data=request.POST)
+        except Exception:
+            return HttpResponse(
+                SERVER_ERROR,
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        return redirect('/historia/lista_de_historias')
+    else:
+        return render(request, 'add_story.html', { 'story_form': story_form })
+
+
 @require_http_methods(["GET", "POST"])
 def add_story(request, id):
     if request.user.is_superuser:
         if request.method == "GET":
-            if id:
-                try:
-                    url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historia/lista_de_historias', id=id)
-                    response = requests.get(url)
-                except Exception:
-                    return HttpResponse(
-                        SERVER_ERROR,
-                        status=HTTP_500_INTERNAL_SERVER_ERROR,
-                    )
-                story = response.json()
-                story_form = StoryForm(data=story)
-            else:
-                story_form = StoryForm()
-            return render(request, 'add_story.html', { 'story_form': story_form, 'id': id })
+            return add_story_get(request, id)
         elif request.method == "POST":
-            story_form = StoryForm(data=request.POST)
-            if (story_form.is_valid()):
-                try:
-                    if id:
-                        url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
-                        requests.put(url, data=request.POST)
-                    else:
-                        url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
-                        requests.post(url, data=request.POST)
-                except Exception:
-                    return HttpResponse(
-                        SERVER_ERROR,
-                        status=HTTP_500_INTERNAL_SERVER_ERROR,
-                    )
-                return redirect('/historia/lista_de_historias')
-            else:
-                return render(request, 'add_story.html', { 'story_form': story_form })
-
+            return add_story_post(request, id)
     else:
         return redirect('/')
