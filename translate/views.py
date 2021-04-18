@@ -46,7 +46,7 @@ def get_word_list(request):
                 'page': page, 
                 'num_pages': p.num_pages, 
                 'search_query': search_query, 
-                'translate_base_url': config('TRANSLATE_MICROSERVICE_URL')})
+            })
         except:
             return HttpResponse(
                 'Erro interno do servidor',

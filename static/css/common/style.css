@@ -330,3 +330,7 @@ body {
   color: #000000;
   transition: 0.30s;
 }
+
+.textarea-input textarea {
+  width: 614px;
+} 

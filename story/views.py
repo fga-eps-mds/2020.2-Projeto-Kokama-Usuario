@@ -47,7 +47,7 @@ def list_story(request):
                 'page': page, 
                 'num_pages': p.num_pages, 
                 'search_query': search_query, 
-                'learn_base_url': config('LEARN_MICROSERVICE_URL')})
+            })
         except:
             return HttpResponse(
                 'Erro interno do servidor',
