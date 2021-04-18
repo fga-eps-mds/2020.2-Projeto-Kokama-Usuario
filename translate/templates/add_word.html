@@ -4,7 +4,11 @@
 
 {% block content %}
 <div class='content-box'>
-    <h1>Adicionar Tradução</h1>
+    {% if id %}
+        <h1>Editar Tradução</h1>
+    {% else %}
+        <h1>Adicionar Tradução</h1>
+    {% endif %}
     <form id="form-container" method="POST">
         {% csrf_token %}
         {% for error in word_kokama_form.errors %}

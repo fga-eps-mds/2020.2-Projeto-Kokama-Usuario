@@ -118,8 +118,8 @@ def add_translate(request, id):
                     'phrase_formset': phrase_formset,
                     'word_portuguses_formset': word_portuguses_formset,
                     'word_kokama_form': word_kokama_form,
-                    'pronunciation_choises_form': pronunciation_choises_form
-
+                    'pronunciation_choises_form': pronunciation_choises_form,
+                    'id': id
                 })
             elif request.method == "POST":
                 phrase_formset = PhraseFormSet(prefix='phrase', data=request.POST)

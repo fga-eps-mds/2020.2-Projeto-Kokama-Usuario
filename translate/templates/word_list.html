@@ -1,14 +1,14 @@
 {% extends 'base_adm.html' %}
 
-{% block title %}Lista de Palavras{% endblock %}
+{% block title %}Lista de Traduções{% endblock %}
 
 {% block content %}
 
     <div class='content-box big'>
 
         <div class='content-top'>
-            <h1 class='content-title'>Lista de Palavras</h1>
-            <a class='button-link' href="/traducao/adicionar_traducao/">Adicionar Palavras</a>
+            <h1 class='content-title'>Lista de Traduções</h1>
+            <a class='button-link' href="/traducao/adicionar_traducao/">Adicionar Tradução</a>
         </div>
 
         <form action="{% url 'get_word_list' %}">
@@ -28,7 +28,7 @@
             </div>
             {% empty %}
             <div class='word-list'>
-                <h3>Não há palavras cadastradas</h3>
+                <h3>Não há traduções cadastradas</h3>
             </div>
             {% endfor %}
         </div>

@@ -4,7 +4,11 @@
 
 {% block content %}
 <div class='content-box big'>
-    <h1>Adicionar História</h1>
+    {% if id %}
+        <h1>Editar História</h1>
+    {% else %}
+        <h1>Adicionar História</h1>
+    {% endif %}
     <form id="form-container" action="/historia/adicionar_historia/{{id}}" method="POST">
         {% csrf_token %}
 
