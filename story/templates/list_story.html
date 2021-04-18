@@ -46,7 +46,7 @@
         {% endif %}
         <p class="page"> {{ page.number }} / {{ num_pages }} </p>
         {% if page.has_previous %}
-        <a class="navigate-page" href="{% url 'get_word_list' %}?page={{page.previous_page_number}}">
+        <a class="navigate-page" href="{% url 'list_story' %}?page={{page.previous_page_number}}">
             <em class="fas fa-arrow-left"></em>
         </a>
         {% else %}
