@@ -1,0 +1,35 @@
+<div class="header">
+
+  <div class="logo-and-title">
+    <img class="logo" alt="logo" src="https://github.com/fga-eps-mds/2020.2-Projeto-Kokama-Wiki/raw/main/docs/assets/img/logo.png">
+    <h2 class="title">Projeto Kokama</h1>
+  </div>
+
+  {% if request.user.is_superuser %}
+  <nav class="top-navbar">
+    <ul>
+      <li>
+        <a href="/traducao/lista_de_palavras/">
+          Lista de Traduções
+        </a>
+      </li>
+      <li>
+        <a href="/historia/lista_de_historias/">
+          Lista de Histórias
+        </a>
+      </li>
+      <li>
+        <a href="/administracao/cadastrar_admin/">
+          Cadastro de Administrador
+        </a>
+      </li>
+      <li>
+        <a href="/administracao/logout/">
+          Sair
+        </a>
+      </li>
+    </ul>
+  </nav>
+  {% endif %}
+
+</div>

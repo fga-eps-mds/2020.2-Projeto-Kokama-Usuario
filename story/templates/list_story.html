@@ -1,0 +1,60 @@
+{% extends 'base_adm.html' %}
+
+{% block title %}Lista de Histórias{% endblock %}
+
+{% block content %}
+
+    <div class='content-box big'>
+
+        <div class='content-top'>
+            <h1 class='content-title'>Lista de Histórias</h1>
+            <a class='button-link' href="/historia/adicionar_historia/">Adicionar História</a>
+        </div>
+
+        <form action="{% url 'list_story' %}">
+            <input class="search-area" type="search" name="search" label="Search" placeholder="Pesquisar" value={{search_query}}>
+            <button class="search-button" type="submit">
+                <em class="fas fa-search"></em>
+            </button>
+        </form>
+
+        <div class="word-list">
+            {% for story in page %}
+            <div class="word-area">
+                <span class="word"><a href="/historia/adicionar_historia/{{story.id}}">{{ story.title }}</a></span>
+                <a href="/historia/lista_de_historias/{{story.id}}/delete" onclick="return confirm('Tem certeza que deseja executar essa operação? Ela não pode ser desfeita!');">
+                    <em class="fas fa-trash"></em>
+                </a>
+            </div>
+            {% empty %}
+            <div class='word-list'>
+                <h3>Não foram encontradas histórias</h3>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+
+        {% if page.has_next %}
+        <a class="navigate-page" href="{% url 'list_story' %}?page={{page.next_page_number}}">
+            <em class="fas fa-arrow-right"></em>
+        </a>
+        {% else %}
+        <a class="navigate-page" href="">
+            <em class="fas fa-arrow-right"></em>
+        </a>
+        {% endif %}
+        <p class="page"> {{ page.number }} / {{ num_pages }} </p>
+        {% if page.has_previous %}
+        <a class="navigate-page" href="{% url 'list_story' %}?page={{page.previous_page_number}}">
+            <em class="fas fa-arrow-left"></em>
+        </a>
+        {% else %}
+        <a class="navigate-page" href="">
+            <em class="fas fa-arrow-left"></em>
+        </a>
+        {% endif %}
+
+    </div>
+
+{% endblock %}
