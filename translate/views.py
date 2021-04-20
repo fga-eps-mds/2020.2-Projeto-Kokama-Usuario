@@ -19,8 +19,8 @@ URL = '{base_url}/{parameter}/{id}'
 
 @require_http_methods(["GET"])
 def login(request):
-    username = 'pam3P3EK8Ojyd3fAXY0sdkPl6toU5FjVdkm89ToKUxJcW3MyJl'
-    password = '4WEWkyy7HqP6Ayk6taQnU1lZM4hI9l7Z7IVxw3ofxr'
+    username = config('TRANSLATE_USERNAME')
+    password = config('TRANSLATE_PASSWORD')
     url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = 'login/')
     try:
         response = requests.post(url, data={'username': username, 'password': password})

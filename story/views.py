@@ -20,8 +20,8 @@ STORIES_PER_PAGE = 25
 
 @require_http_methods(["GET"])
 def login(request):
-    username = 'UBJ8eX2n7QkN0kgfX6YNZNmDzQ1oWpTIaVBMBcLXh08vnlb0Gr'
-    password = 'oajsd-98iq-34ṕ]k8()(*3eoijioq2hjçjsdpkpákd'
+    username = config('LEARN_USERNAME')
+    password = config('LEARN_PASSWORD')
     url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'login/')
     try:
         response = requests.post(url, data={'username': username, 'password': password})
