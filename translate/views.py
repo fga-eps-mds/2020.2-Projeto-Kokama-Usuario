@@ -5,6 +5,8 @@ import requests
 from .forms import WordKokamaForm, WordPortugueseFormSet, PronunciationChoisesForm, PhraseFormSet
 from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
+    HTTP_400_BAD_REQUEST,
+    HTTP_200_OK,
 )
 from rest_framework.response import Response
 from django.http import HttpResponse
@@ -13,6 +15,21 @@ from django.core.paginator import Paginator
 WORDS_PER_PAGE = 25
 SERVER_ERROR = 'Erro interno do servidor'
 URL = '{base_url}/{parameter}/{id}'
+
+
+@require_http_methods(["GET"])
+def login(request):
+    username = 'pam3P3EK8Ojyd3fAXY0sdkPl6toU5FjVdkm89ToKUxJcW3MyJl'
+    password = '4WEWkyy7HqP6Ayk6taQnU1lZM4hI9l7Z7IVxw3ofxr'
+    url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = 'login/')
+    try:
+        response = requests.post(url, data={'username': username, 'password': password})
+        if response.status_code == HTTP_400_BAD_REQUEST:
+            return Response(status=HTTP_400_BAD_REQUEST)
+    except Exception:
+        return Response(status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return Response(status=HTTP_200_OK)
 
 
 def get_search_query(match, query_list):
@@ -35,6 +52,11 @@ def get_word_list(request):
         url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras")
         try:
             search_query = request.GET.get('search', '').lower()
+            if login(request).status_code != HTTP_200_OK:
+                return HttpResponse(
+                    SERVER_ERROR,
+                    status=HTTP_500_INTERNAL_SERVER_ERROR,
+                )
             response = requests.get(url)
             translations = response.json()
             if search_query != '':
