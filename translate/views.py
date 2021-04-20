@@ -87,6 +87,11 @@ def delete_translate(request, id):
     if request.user.is_superuser:
         url = URL.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras", id = id)
         try:
+            if login(request).status_code != HTTP_200_OK:
+                return HttpResponse(
+                    SERVER_ERROR,
+                    status=HTTP_500_INTERNAL_SERVER_ERROR,
+                )
             requests.delete(url)
             return redirect('/traducao/lista_de_palavras')
         except Exception:
@@ -167,6 +172,11 @@ def add_translate_get(request, id):
 def add_translate(request, id):
     if request.user.is_superuser:
         try:
+            if login(request).status_code != HTTP_200_OK:
+                return HttpResponse(
+                    SERVER_ERROR,
+                    status=HTTP_500_INTERNAL_SERVER_ERROR,
+                )
             if request.method == "GET":
                 return add_translate_get(request, id)
             elif request.method == "POST":
