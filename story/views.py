@@ -87,6 +87,11 @@ def delete_story(request, id):
     if request.user.is_superuser:
         url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
         try:
+            if login(request).status_code != HTTP_200_OK:
+                return HttpResponse(
+                    SERVER_ERROR,
+                    status=HTTP_500_INTERNAL_SERVER_ERROR,
+                )
             requests.delete(url)
             return redirect('/historia/lista_de_historias')
         except Exception:
@@ -136,6 +141,11 @@ def add_story_post(request, id):
 @require_http_methods(["GET", "POST"])
 def add_story(request, id):
     if request.user.is_superuser:
+        if login(request).status_code != HTTP_200_OK:
+            return HttpResponse(
+                SERVER_ERROR,
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+            )
         if request.method == "GET":
             return add_story_get(request, id)
         elif request.method == "POST":
