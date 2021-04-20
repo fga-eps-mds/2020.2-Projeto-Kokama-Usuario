@@ -17,7 +17,7 @@ SERVER_ERROR = 'Erro interno do servidor'
 URL = '{base_url}/{parameter}/{id}'
 
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def login(request):
     username = config('TRANSLATE_USERNAME')
     password = config('TRANSLATE_PASSWORD')

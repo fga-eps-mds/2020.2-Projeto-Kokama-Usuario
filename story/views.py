@@ -18,7 +18,7 @@ SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
 
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def login(request):
     username = config('LEARN_USERNAME')
     password = config('LEARN_PASSWORD')
