@@ -11,7 +11,7 @@
     {% endif %}
     <form id="form-container" action="/historia/adicionar_historia/{{id}}" method="POST">
         {% csrf_token %}
-
+        
         {% for error in story_form.title.errors %}
         <p style="color: red">{{ error }}</p>
         {% endfor %}

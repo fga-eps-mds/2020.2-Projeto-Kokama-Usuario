@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.template import RequestContext
 from django.views.decorators.http import require_http_methods
 from decouple import config
 import requests
@@ -18,10 +19,6 @@ SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
 
 
-# Os viewsset tão cagando a autenticação das adições, exclusões e edições
-# A auth antes do view(ou viewset), ou seja, nos outros microsserviços
-# View intermediária entre o request daqui e o certo
-# Método só pode ser acessado por um IP especifico (?)
 
 def get_search_list(match, query_list):
     search_list = []
@@ -36,31 +33,12 @@ def get_search_list(match, query_list):
     return search_list
 
 
-def login():
-    s = requests.Session()
-    username = config('LEARN_USERNAME')
-    password = config('LEARN_PASSWORD')
-    url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'login/')
-    try:
-        response = s.post(url, data={'username': username, 'password': password})
-        if response.status_code == HTTP_400_BAD_REQUEST:
-            return False
-    except Exception:
-        return False
-
-    return s
-
-
 @require_http_methods(["GET"])
 def list_story(request):
     if request.user.is_superuser:
-        url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias')
-        session = login()
         try:
-            if not session:
-                return Response(HTTP_500_INTERNAL_SERVER_ERROR)
-
-            response = session.get(url)
+            url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias')
+            response = requests.get(url, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
             stories = response.json()
             search_query = request.GET.get('search', '').lower()
             if search_query != '':
@@ -80,7 +58,6 @@ def list_story(request):
             })
 
         except Exception:
-            print("Deu exception")
             return HttpResponse(
                 SERVER_ERROR,
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
@@ -88,19 +65,14 @@ def list_story(request):
     else:
         return redirect('/')
 
-@require_http_methods(["POST", "GET", "DELETE"])
+
+
+@require_http_methods(["GET", "DELETE"])
 def delete_story(request, id):
     if request.user.is_superuser:
-        url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
         try:
-            session = login()
-            print(dir(session))
-            if not session:
-                return HttpResponse(
-                    SERVER_ERROR,
-                    status=HTTP_500_INTERNAL_SERVER_ERROR,
-                )
-            requests.delete(url)
+            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias', id = id)
+            requests.delete(url, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
 
             return redirect('/historia/lista_de_historias')
         except Exception:
@@ -114,41 +86,30 @@ def delete_story(request, id):
 def add_story_get(request, id):
     if id:
         try:
-            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historia/lista_de_historias', id=id)
-            session = login()
-            if not session:
-                return HttpResponse(
-                    SERVER_ERROR,
-                    status=HTTP_500_INTERNAL_SERVER_ERROR,
-                )
-            response = session.get(url)
+            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias', id=id)
+            response = requests.get(url, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
+            story = response.json()
+            story_form = StoryForm(data=story)
         except Exception:
             return HttpResponse(
                 SERVER_ERROR,
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
-        story = response.json()
-        story_form = StoryForm(data=story)
     else:
         story_form = StoryForm()
     return render(request, 'add_story.html', { 'story_form': story_form, 'id': id })
 
+
 def add_story_post(request, id):
     story_form = StoryForm(data=request.POST)
-    session = login()
-    if not session:
-        return HttpResponse(
-            SERVER_ERROR,
-            status=HTTP_500_INTERNAL_SERVER_ERROR,
-        )
     if (story_form.is_valid()):
         try:
             if id:
-                url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
-                requests.put(url, data=request.POST)
+                url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias', id = id)
+                requests.put(url, data=request.POST, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
             else:
-                url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
-                requests.post(url, data=request.POST)
+                url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias')
+                requests.post(url, data=request.POST, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
         except Exception:
             return HttpResponse(
                 SERVER_ERROR,
