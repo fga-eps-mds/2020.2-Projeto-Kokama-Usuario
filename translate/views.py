@@ -17,21 +17,6 @@ SERVER_ERROR = 'Erro interno do servidor'
 URL = '{base_url}/{parameter}/{id}'
 
 
-def login():
-    s = requests.Session()
-    username = config('TRANSLATE_USERNAME')
-    password = config('TRANSLATE_PASSWORD')
-    url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = 'login/')
-    try:
-        response = s.post(url, data={'username': username, 'password': password})
-        if response.status_code == HTTP_400_BAD_REQUEST:
-            return False
-    except Exception:
-        return False
-
-    return s
-
-
 def get_search_query(match, query_list):
     search_list = []
     for translate in query_list:
@@ -51,13 +36,7 @@ def get_word_list(request):
     if request.user.is_superuser:
         url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras")
         try:
-            session = login()
-            if not session:
-                return HttpResponse(
-                    SERVER_ERROR,
-                    status=HTTP_500_INTERNAL_SERVER_ERROR,
-                )
-            response = session.get(url)
+            response = requests.get(url)
             translations = response.json()
             search_query = request.GET.get('search', '').lower()
             if search_query != '':
@@ -88,13 +67,7 @@ def delete_translate(request, id):
     if request.user.is_superuser:
         url = URL.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras", id = id)
         try:
-            session = login()
-            if not session:
-                return HttpResponse(
-                    SERVER_ERROR,
-                    status=HTTP_500_INTERNAL_SERVER_ERROR,
-                )
-            session.delete(url)
+            requests.delete(url)
             return redirect('/traducao/lista_de_palavras')
         except Exception:
             return HttpResponse(
@@ -104,14 +77,7 @@ def delete_translate(request, id):
     else:
         return redirect('/')
 
-def add_translate_post(request, id):
-    session = login()
-    if not session:
-        return HttpResponse(
-            SERVER_ERROR,
-            status=HTTP_500_INTERNAL_SERVER_ERROR,
-        )
-    
+def add_translate_post(request, id): 
     phrase_formset = PhraseFormSet(prefix='phrase', data=request.POST)
     word_portugueses_formset = WordPortugueseFormSet(prefix='word-portuguese', data=request.POST)
     word_kokama_form = WordKokamaForm(data=request.POST)
@@ -119,7 +85,7 @@ def add_translate_post(request, id):
     all_forms_are_valid = phrase_formset.is_valid() and word_portugueses_formset.is_valid() and word_kokama_form.is_valid() and pronunciation_choises_form.is_valid()
     if (all_forms_are_valid):
         url = URL.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/adicionar_traducao", id = id)
-        session.post(url, data=request.POST)
+        requests.post(url, data=request.POST)
         return redirect('/traducao/lista_de_palavras')
     else:
         return render(request, 'add_word.html', {
@@ -130,15 +96,9 @@ def add_translate_post(request, id):
         })
 
 def add_translate_get(request, id):
-    session = login()
-    if not session:
-        return HttpResponse(
-            SERVER_ERROR,
-            status=HTTP_500_INTERNAL_SERVER_ERROR,
-        )
     if id:
         url = URL.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = 'traducao/dicionario', id=id)
-        data = session.get(url).json()
+        data = requests.get(url).json()
         pronunciation_type = 0
         if data['pronunciation_type'] == 'feminino':
             pronunciation_type = 2
@@ -187,12 +147,6 @@ def add_translate_get(request, id):
 def add_translate(request, id):
     if request.user.is_superuser:
         try:
-            session = login()
-            if not session:
-                return HttpResponse(
-                    SERVER_ERROR,
-                    status=HTTP_500_INTERNAL_SERVER_ERROR,
-                )
             if request.method == "GET":
                 return add_translate_get(request, id)
             elif request.method == "POST":
