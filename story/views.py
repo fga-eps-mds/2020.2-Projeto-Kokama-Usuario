@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 
-STORY_LIST_URL = 'historia/lista_de_historias'
+STORY_LIST_URL = 'ensino/lista_de_historias'
 SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
 
@@ -37,8 +37,8 @@ def get_search_list(match, query_list):
 def list_story(request):
     if request.user.is_superuser:
         try:
-            url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias')
-            response = requests.get(url, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
+            url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
+            response = requests.get(url)
             stories = response.json()
             search_query = request.GET.get('search', '').lower()
             if search_query != '':
@@ -71,8 +71,8 @@ def list_story(request):
 def delete_story(request, id):
     if request.user.is_superuser:
         try:
-            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias', id = id)
-            requests.delete(url, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
+            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
+            requests.delete(url)
 
             return redirect('/historia/lista_de_historias')
         except Exception:
@@ -86,8 +86,8 @@ def delete_story(request, id):
 def add_story_get(request, id):
     if id:
         try:
-            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias', id=id)
-            response = requests.get(url, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
+            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
+            response = requests.get(url)
             story = response.json()
             story_form = StoryForm(data=story)
         except Exception:
@@ -105,11 +105,11 @@ def add_story_post(request, id):
     if (story_form.is_valid()):
         try:
             if id:
-                url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias', id = id)
-                requests.put(url, data=request.POST, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
+                url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
+                requests.put(url, data=request.POST)
             else:
-                url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historias')
-                requests.post(url, data=request.POST, auth=(config('LEARN_USERNAME'),config('LEARN_PASSWORD')))
+                url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
+                requests.post(url, data=request.POST)
         except Exception:
             return HttpResponse(
                 SERVER_ERROR,
