@@ -12,6 +12,16 @@
     <form id="form-container" action="/historia/adicionar_historia/{{id}}" method="POST">
         {% csrf_token %}
 
+        {% for error in story_form.language.errors %}
+            <p class="red-text">{{ error }}</p>     
+        {% endfor %}
+        <div class="drop-down-box">
+            <label class="drop-down-text" for="story_language">
+                Escolha o idioma:
+            </label>
+            {{story_form.language}}
+        </div>
+
         {% for error in story_form.title.errors %}
         <p style="color: red">{{ error }}</p>
         {% endfor %}
