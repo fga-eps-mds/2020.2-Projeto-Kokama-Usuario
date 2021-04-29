@@ -23,18 +23,16 @@
         </div>
 
         {% for error in story_form.title.errors %}
-        <p style="color: red">{{ error }}</p>
+            <p style="color: red" id="erro_title">{{ error }}</p>
         {% endfor %}
-
         <div class='input-box'>
             {{ story_form.title }}
             <label>Título:</label>
         </div>
 
         {% for error in story_form.text.errors %}
-        <p style="color: red">{{ error }}</p>
+        <p style="color: red" id="erro_text">>{{ error }}</p>
         {% endfor %}
-        
         <label>Texto:</label>
         <div class='textarea-input'>
             {{ story_form.text }}
@@ -42,4 +40,45 @@
 
         <button class="submit-buttom" type="submit">Salvar</button>
 </div>
+
+<script>
+    let container = document.querySelector("#form-container")
+    let language = document.querySelector("#id_language").value
+    let titleArea = document.querySelector(".input-box")
+    let textArea = document.querySelector(".textarea-input")
+    let submitButton = document.querySelector(".submit-buttom")
+
+    // Se selected for "ambos"
+    if (language == 1) {
+        let newTitleArea = titleArea.cloneNode(true)
+        let newTitleForm = newTitleArea.children[0]
+
+        let newTextArea = textArea.cloneNode(true)
+        let newTextForm = newTextArea.children[0]
+
+        // Zerar valores do clone
+        newTitleForm.setAttribute('value', '')
+        newTextForm.setAttribute('value', '')
+
+        submitButton.style.display='none'
+        let newSubmitButton = submitButton.cloneNode(true)
+        newSubmitButton.style.display='block'
+        
+
+        // Remover erros do clone
+        //newTitleForm.children["title_error"]?.remove()
+        //newTextForm.children["text_error"]?.remove()
+
+        // Insere novos forms no html
+        container.appendChild(newTitleArea)
+        container.appendChild(newTextArea)
+        container.appendChild(newSubmitButton)
+    }
+
+
+</script>
+
 {% endblock %}
+
+
+
