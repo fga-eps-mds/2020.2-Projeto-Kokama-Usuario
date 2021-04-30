@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 
-STORY_LIST_URL = 'historia/lista_de_historias'
+STORY_LIST_URL = 'ensino/lista_de_historias'
 SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
 
