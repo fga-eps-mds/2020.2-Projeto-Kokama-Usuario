@@ -8,6 +8,8 @@
         <h1>Editar História</h1>
     {% else %}
         <h1>Adicionar História</h1>
+        <input type="button" id="change_language" value="Trocar idioma"/>
+        <input type="button" id="add_translation" value="Adicionar tradução" style="margin-bottom:40px"/>
     {% endif %}
     <form id="form-container" action="/historia/adicionar_historia/{{id}}" method="POST">
         {% csrf_token %}
@@ -23,15 +25,15 @@
         {% for error in story_form.text_portuguese.errors %}
         <p style="color: red">{{ error }}</p>
         {% endfor %}
-        <label>Texto Português:</label>
         <div class='textarea-input'>
+            <label>Texto Português:</label>
             {{ story_form.text_portuguese }}
         </div>
 
         {% for error in story_form.title_kokama.errors %}
             <p style="color: red">{{ error }}</p>
         {% endfor %}
-        <div class='input-box'>
+        <div class='input-box' style="margin-top:40px">
             {{ story_form.title_kokama }}
             <label>Título Kokama:</label>
         </div>
@@ -44,37 +46,68 @@
             {{ story_form.text_kokama }}
         </div>
 
-        <input type="button" id="add_form" value="Adicionar tradução"/>
-
         <button class="submit-buttom" type="submit">Salvar</button>
 </div>
 
 <script>
-
+    let title_1 = document.querySelector("#id_title_portuguese")
+    let text_1 = document.querySelector("#id_text_portuguese")
     let title_2 = document.querySelector("#id_title_kokama")
     let text_2 = document.querySelector("#id_text_kokama")
-    let add_button = document.querySelector("#add_form")
     let add_or_edit = document.querySelector("h1")
 
     if (add_or_edit.innerText == "Editar História") {
         add_button.style.display = "none"
+
+
+    // Adicionando
     } else {
-        title_2.parentElement.style.display="none"
-        text_2.parentElement.style.display="none"
+        title_2.parentElement.style.display = "none"
+        text_2.parentElement.style.display = "none"
 
-        add_button.addEventListener("click", add_form)
+        let add_button = document.querySelector("#add_translation")
+        add_button.addEventListener("click", add_translation)
+        let change_lang_button = document.querySelector("#change_language")
+        change_lang_button.addEventListener("click", change_language)
 
-        function add_form() {
+        function add_translation() {
             if (add_button.value == "Remover tradução") {
+                change_lang_button.style.display = "block"
                 add_button.value = "Adicionar tradução"
-                title_2.parentElement.style.display='none'
-                text_2.parentElement.style.display='none'
+                title_2.parentElement.style.display = "none"
+                text_2.parentElement.style.display = "none"
+                title_2.value = ""
+                text_2.value = ""
             } else {
+                change_lang_button.style.display = "none"
                 add_button.value = "Remover tradução"
-                title_2.parentElement.style.display='block'
-                text_2.parentElement.style.display='block'
+                title_1.parentElement.style.display = "block"
+                text_1.parentElement.style.display = "block"
+                title_2.parentElement.style.display = "block"
+                text_2.parentElement.style.display = "block"
             }
         }
+
+        function change_language() {
+            if (title_1.parentElement.style.display == "none") {
+                title_2.parentElement.style.display="none"
+                text_2.parentElement.style.display="none"
+                title_2.value = ""
+                text_2.value = ""
+
+                title_1.parentElement.style.display="block"
+                text_1.parentElement.style.display="block"
+            } else {
+                title_1.parentElement.style.display="none"
+                text_1.parentElement.style.display="none"
+                title_1.value = ""
+                text_1.value = ""
+
+                title_2.parentElement.style.display="block"
+                text_2.parentElement.style.display="block"
+            }
+        }
+        
     }
 
 
