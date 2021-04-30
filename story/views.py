@@ -16,6 +16,7 @@ STORY_LIST_URL = 'ensino/lista_de_historias'
 SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
 
+## Atualizar pesquisa com title/text de cada língua
 def get_search_list(match, query_list):
     search_list = []
     for story in query_list:
@@ -80,7 +81,7 @@ def delete_story(request, id):
 def add_story_get(request, id):
     if id:
         try:
-            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = 'historia/lista_de_historias', id=id)
+            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
             response = requests.get(url)
         except Exception:
             return HttpResponse(

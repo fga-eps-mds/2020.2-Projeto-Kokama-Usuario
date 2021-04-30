@@ -12,68 +12,110 @@
     <form id="form-container" action="/historia/adicionar_historia/{{id}}" method="POST">
         {% csrf_token %}
 
-        {% for error in story_form.language.errors %}
-            <p class="red-text">{{ error }}</p>     
-        {% endfor %}
-        <div class="drop-down-box">
-            <label class="drop-down-text" for="story_language">
-                Escolha o idioma:
-            </label>
-            {{story_form.language}}
-        </div>
-
-        {% for error in story_form.title.errors %}
-            <p style="color: red" id="erro_title">{{ error }}</p>
+        {% for error in story_form.title_portuguese.errors %}
+            <p style="color: red">{{ error }}</p>
         {% endfor %}
         <div class='input-box'>
-            {{ story_form.title }}
-            <label>Título:</label>
+            {{ story_form.title_portuguese }}
+            <label>Título Português:</label>
         </div>
 
-        {% for error in story_form.text.errors %}
-        <p style="color: red" id="erro_text">>{{ error }}</p>
+        {% for error in story_form.text_portuguese.errors %}
+        <p style="color: red">{{ error }}</p>
         {% endfor %}
-        <label>Texto:</label>
+        <label>Texto Português:</label>
         <div class='textarea-input'>
-            {{ story_form.text }}
+            {{ story_form.text_portuguese }}
         </div>
+
+        {% for error in story_form.title_kokama.errors %}
+            <p style="color: red">{{ error }}</p>
+        {% endfor %}
+        <div class='input-box'>
+            {{ story_form.title_kokama }}
+            <label>Título Kokama:</label>
+        </div>
+
+        {% for error in story_form.text_kokama.errors %}
+        <p style="color: red">{{ error }}</p>
+        {% endfor %}
+        <div class='textarea-input'>
+            <label>Texto Kokama:</label>
+            {{ story_form.text_kokama }}
+        </div>
+
+        <input type="button" id="add_form" value="Adicionar tradução"/>
 
         <button class="submit-buttom" type="submit">Salvar</button>
 </div>
 
 <script>
-    let container = document.querySelector("#form-container")
-    let language = document.querySelector("#id_language").value
+
+    let title_2 = document.querySelector("#id_title_kokama")
+    let text_2 = document.querySelector("#id_text_kokama")
+    let add_button = document.querySelector("#add_form")
+    let add_or_edit = document.querySelector("h1")
+
+    if (add_or_edit.innerText == "Editar História") {
+        add_button.style.display = "none"
+    } else {
+        title_2.parentElement.style.display="none"
+        text_2.parentElement.style.display="none"
+
+        add_button.addEventListener("click", add_form)
+
+        function add_form() {
+            if (add_button.value == "Remover tradução") {
+                add_button.value = "Adicionar tradução"
+                title_2.parentElement.style.display='none'
+                text_2.parentElement.style.display='none'
+            } else {
+                add_button.value = "Remover tradução"
+                title_2.parentElement.style.display='block'
+                text_2.parentElement.style.display='block'
+            }
+        }
+    }
+
+
+
+
+    {% comment %} let container = document.querySelector("#form-container")
+    let language_dropdown = document.querySelector("#id_language")
     let titleArea = document.querySelector(".input-box")
     let textArea = document.querySelector(".textarea-input")
     let submitButton = document.querySelector(".submit-buttom")
 
-    // Se selected for "ambos"
-    if (language == 1) {
-        let newTitleArea = titleArea.cloneNode(true)
-        let newTitleForm = newTitleArea.children[0]
+    let newTitleArea = titleArea.cloneNode(true)
+    let newTitleForm = newTitleArea.children[0]
+    newTitleForm.setAttribute('value', '')
+    container.appendChild(newTitleArea)
 
-        let newTextArea = textArea.cloneNode(true)
-        let newTextForm = newTextArea.children[0]
+    let newTextArea = textArea.cloneNode(true)
+    let newTextForm = newTextArea.children[0]
+    newTextForm.setAttribute('value', '')
+    container.appendChild(newTextArea)
 
-        // Zerar valores do clone
-        newTitleForm.setAttribute('value', '')
-        newTextForm.setAttribute('value', '')
+    
+    container.appendChild(submitButton)
 
-        submitButton.style.display='none'
-        let newSubmitButton = submitButton.cloneNode(true)
-        newSubmitButton.style.display='block'
-        
+    language_dropdown.onchange = function() {
+        language = language_dropdown.value
+        if (language == 1) {
+            newTitleArea.style.display='block'
+            newTitleArea["children"].id_title.required = true
+            newTextArea.style.display='block'
+            newTextArea["children"].id_text.required = true
+        }
+        else {
+            newTitleArea.style.display='none'
+            newTitleArea["children"].id_title.required = false
+            newTextArea.style.display='none'
+            newTextArea["children"].id_text.required = false
+        }
 
-        // Remover erros do clone
-        //newTitleForm.children["title_error"]?.remove()
-        //newTextForm.children["text_error"]?.remove()
+    }; {% endcomment %}
 
-        // Insere novos forms no html
-        container.appendChild(newTitleArea)
-        container.appendChild(newTextArea)
-        container.appendChild(newSubmitButton)
-    }
 
 
 </script>

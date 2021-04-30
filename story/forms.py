@@ -1,25 +1,30 @@
 from django import forms
-from django.core.validators import RegexValidator
 
 
 class StoryForm(forms.Form):
 
-    language = forms.ChoiceField(
-        choices = (
-            ("1", "Ambos"),
-            ("2", "Português"),
-            ("3", "Kokama"),
-        ),
-        label='',
-    )
-
-    title = forms.CharField(
+    title_portuguese = forms.CharField(
         label='title',
+        required=False,
         error_messages={'required': 'Preencha este campo.'}
     )
     
-    text = forms.CharField(
+    text_portuguese = forms.CharField(
         label='text',
+        required=False,
+        widget=forms.Textarea,
+        error_messages={'required': 'Preencha este campo.'}
+    )
+
+    title_kokama = forms.CharField(
+        label='title',
+        required=False,
+        error_messages={'required': 'Preencha este campo.'}
+    )
+    
+    text_kokama = forms.CharField(
+        label='text',
+        required=False,
         widget=forms.Textarea,
         error_messages={'required': 'Preencha este campo.'}
     )
