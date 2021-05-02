@@ -5,14 +5,25 @@
 {% block content %}
 <div class='content-box big'>
     {% if id %}
-        <h1>Editar História</h1>
+        <h1 class="content-title" >Editar História</h1>
     {% else %}
-        <h1>Adicionar História</h1>
-        <input type="button" id="change_language" value="Trocar idioma"/>
-        <input type="button" id="add_translation" value="Adicionar tradução" style="margin-bottom:40px"/>
+        <h1 class="content-title">Adicionar História</h1>
+        {% comment %} <input type="button" id="change_language" value="Trocar idioma"/>
+        <input type="button" id="add_translation" value="Adicionar tradução" style="margin-bottom:40px"/> {% endcomment %}
     {% endif %}
     <form id="form-container" action="/historia/adicionar_historia/{{id}}" method="POST">
         {% csrf_token %}
+
+        <div class="drop-down-box bottom-space">
+            <label class="drop-down-text" for="languages">
+                Escolha um idioma:
+            </label>
+            <select name="languages" id="language_choice">
+                <option value="Ambos" selected>Ambos</option>
+                <option value="Português">Português</option>
+                <option value="Kokama">Kokama</option>
+            </select>
+        </div>
 
         {% for error in story_form.title_portuguese.errors %}
             <p style="color: red">{{ error }}</p>
