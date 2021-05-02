@@ -16,17 +16,24 @@ STORY_LIST_URL = 'ensino/lista_de_historias'
 SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
 
-## Atualizar pesquisa com title/text de cada língua
 def get_search_list(match, query_list):
     search_list = []
     for story in query_list:
-        if match.lower() in story['title'].lower():
+        if (match.lower() in story['title_portuguese'].lower()
+        or match.lower() in story['title_kokama'].lower()):
             search_list.append(story)
         else:
-            for word in story['text'].split(",.?!;()"):
+            added = False
+            for word in story['text_portuguese'].split(",.?!;() "):
                 if match.lower() in word.lower():
                     search_list.append(story)
+                    added = True
                     break
+            if not added:
+                for word in story['text_kokama'].split(",.?!;() "):
+                    if match.lower() in word.lower():
+                        search_list.append(story)
+                        break
     return search_list
 
 
