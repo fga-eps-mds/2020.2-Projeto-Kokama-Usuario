@@ -19,7 +19,7 @@
                 Escolha um idioma:
             </label>
             <select name="languages" id="language_choice">
-                <option value="Ambos" selected>Ambos</option>
+                <option value="Ambos">Ambos</option>
                 <option value="Português">Português</option>
                 <option value="Kokama">Kokama</option>
             </select>
@@ -36,7 +36,7 @@
         {% for error in story_form.text_portuguese.errors %}
         <p style="color: red">{{ error }}</p>
         {% endfor %}
-        <div class='textarea-input'>
+        <div class='textarea-input big-bottom-space'>
             <label>Texto Português:</label>
             {{ story_form.text_portuguese }}
         </div>
@@ -44,7 +44,7 @@
         {% for error in story_form.title_kokama.errors %}
             <p style="color: red">{{ error }}</p>
         {% endfor %}
-        <div class='input-box' style="margin-top:40px">
+        <div class='input-box'>
             {{ story_form.title_kokama }}
             <label>Título Kokama:</label>
         </div>
@@ -52,7 +52,7 @@
         {% for error in story_form.text_kokama.errors %}
         <p style="color: red">{{ error }}</p>
         {% endfor %}
-        <div class='textarea-input'>
+        <div class='textarea-input big-bottom-space'>
             <label>Texto Kokama:</label>
             {{ story_form.text_kokama }}
         </div>
@@ -69,38 +69,12 @@
 
     if (add_or_edit.innerText == "Editar História") {
         add_button.style.display = "none"
-
-
-    // Adicionando
     } else {
-        title_2.parentElement.style.display = "none"
-        text_2.parentElement.style.display = "none"
-
-        let add_button = document.querySelector("#add_translation")
-        add_button.addEventListener("click", add_translation)
-        let change_lang_button = document.querySelector("#change_language")
-        change_lang_button.addEventListener("click", change_language)
-
-        function add_translation() {
-            if (add_button.value == "Remover tradução") {
-                change_lang_button.style.display = "block"
-                add_button.value = "Adicionar tradução"
-                title_2.parentElement.style.display = "none"
-                text_2.parentElement.style.display = "none"
-                title_2.value = ""
-                text_2.value = ""
-            } else {
-                change_lang_button.style.display = "none"
-                add_button.value = "Remover tradução"
-                title_1.parentElement.style.display = "block"
-                text_1.parentElement.style.display = "block"
-                title_2.parentElement.style.display = "block"
-                text_2.parentElement.style.display = "block"
-            }
-        }
+        let dropdown = document.getElementById("language_choice");
+        dropdown.addEventListener("change", change_language)
 
         function change_language() {
-            if (title_1.parentElement.style.display == "none") {
+            if (dropdown.value == "Português") {
                 title_2.parentElement.style.display="none"
                 text_2.parentElement.style.display="none"
                 title_2.value = ""
@@ -108,11 +82,17 @@
 
                 title_1.parentElement.style.display="block"
                 text_1.parentElement.style.display="block"
-            } else {
+            } else if (dropdown.value == "Kokama") {
                 title_1.parentElement.style.display="none"
                 text_1.parentElement.style.display="none"
                 title_1.value = ""
                 text_1.value = ""
+
+                title_2.parentElement.style.display="block"
+                text_2.parentElement.style.display="block"
+            } else {
+                title_1.parentElement.style.display="block"
+                text_1.parentElement.style.display="block"
 
                 title_2.parentElement.style.display="block"
                 text_2.parentElement.style.display="block"

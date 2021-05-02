@@ -337,4 +337,8 @@ body {
 
 .textarea-input textarea {
   width: 614px;
-} 
+}
+
+.big-bottom-space {
+  margin-bottom: 40px;
+}
