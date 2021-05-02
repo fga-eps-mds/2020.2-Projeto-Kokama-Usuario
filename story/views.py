@@ -16,24 +16,29 @@ STORY_LIST_URL = 'ensino/lista_de_historias'
 SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
 
+def is_word_in_title(match, title_list):
+    for title in title_list:
+        if match.lower() in title.lower():
+            return True
+    return False
+
+def is_word_in_text(match, text):
+    for word in text.split(",.?!;() "):
+        if match.lower() in word.lower():
+            return True
+    return False
+
 def get_search_list(match, query_list):
     search_list = []
     for story in query_list:
-        if (match.lower() in story['title_portuguese'].lower()
-        or match.lower() in story['title_kokama'].lower()):
+        if is_word_in_title(match, [story['title_portuguese'], story['title_kokama']]):
             search_list.append(story)
         else:
-            added = False
-            for word in story['text_portuguese'].split(",.?!;() "):
-                if match.lower() in word.lower():
-                    search_list.append(story)
-                    added = True
-                    break
-            if not added:
-                for word in story['text_kokama'].split(",.?!;() "):
-                    if match.lower() in word.lower():
-                        search_list.append(story)
-                        break
+            if is_word_in_text(match, story['text_portuguese']):
+                search_list.append(story)
+            elif is_word_in_text(match, story['text_kokama']):
+                search_list.append(story)
+
     return search_list
 
 
