@@ -5,6 +5,8 @@ import requests
 from .forms import WordKokamaForm, WordPortugueseFormSet, PronunciationChoisesForm, PhraseFormSet
 from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
+    HTTP_400_BAD_REQUEST,
+    HTTP_200_OK,
 )
 from rest_framework.response import Response
 from django.http import HttpResponse
@@ -34,9 +36,9 @@ def get_word_list(request):
     if request.user.is_superuser:
         url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras")
         try:
-            search_query = request.GET.get('search', '').lower()
             response = requests.get(url)
             translations = response.json()
+            search_query = request.GET.get('search', '').lower()
             if search_query != '':
                 search_list = get_search_query(search_query, translations)                                 
                 translations = search_list.copy()
@@ -75,7 +77,7 @@ def delete_translate(request, id):
     else:
         return redirect('/')
 
-def add_translate_post(request, id):
+def add_translate_post(request, id): 
     phrase_formset = PhraseFormSet(prefix='phrase', data=request.POST)
     word_portugueses_formset = WordPortugueseFormSet(prefix='word-portuguese', data=request.POST)
     word_kokama_form = WordKokamaForm(data=request.POST)
