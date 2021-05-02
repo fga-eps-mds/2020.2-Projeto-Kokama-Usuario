@@ -65,82 +65,53 @@
     let text_1 = document.querySelector("#id_text_portuguese")
     let title_2 = document.querySelector("#id_title_kokama")
     let text_2 = document.querySelector("#id_text_kokama")
-    let add_or_edit = document.querySelector("h1")
+    let page_title = document.querySelector("h1")
+    let add_or_edit = page_title.innerText.split(" ")[0]
 
-    if (add_or_edit.innerText == "Editar História") {
-        add_button.style.display = "none"
-    } else {
-        let dropdown = document.getElementById("language_choice");
-        dropdown.addEventListener("change", change_language)
+    let dropdown = document.getElementById("language_choice");
+    dropdown.addEventListener("change", change_language)
 
-        function change_language() {
-            if (dropdown.value == "Português") {
-                title_2.parentElement.style.display="none"
-                text_2.parentElement.style.display="none"
-                title_2.value = ""
-                text_2.value = ""
-
-                title_1.parentElement.style.display="block"
-                text_1.parentElement.style.display="block"
-            } else if (dropdown.value == "Kokama") {
-                title_1.parentElement.style.display="none"
-                text_1.parentElement.style.display="none"
-                title_1.value = ""
-                text_1.value = ""
-
-                title_2.parentElement.style.display="block"
-                text_2.parentElement.style.display="block"
+    function change_language() {
+        if (dropdown.value == "Português") {
+            if (add_or_edit == "Editar") {
+                page_title.innerText = "Editar História em Português"
             } else {
-                title_1.parentElement.style.display="block"
-                text_1.parentElement.style.display="block"
-
-                title_2.parentElement.style.display="block"
-                text_2.parentElement.style.display="block"
+                page_title.innerText = "Adicionar História em Português"
             }
+            
+            title_2.parentElement.style.display="none"
+            text_2.parentElement.style.display="none"
+            title_2.value = ""
+            text_2.value = ""
+
+            title_1.parentElement.style.display="block"
+            text_1.parentElement.style.display="block"
+        } else if (dropdown.value == "Kokama") {
+            if (add_or_edit == "Editar") {
+                page_title.innerText = "Editar História em Kokama"
+            } else {
+                page_title.innerText = "Adicionar História em Kokama"
+            }
+            title_1.parentElement.style.display="none"
+            text_1.parentElement.style.display="none"
+            title_1.value = ""
+            text_1.value = ""
+
+            title_2.parentElement.style.display="block"
+            text_2.parentElement.style.display="block"
+        } else {
+            if (add_or_edit == "Editar") {
+                page_title.innerText = "Editar História"
+            } else {
+                page_title.innerText = "Adicionar História"
+            }
+            title_1.parentElement.style.display="block"
+            text_1.parentElement.style.display="block"
+
+            title_2.parentElement.style.display="block"
+            text_2.parentElement.style.display="block"
         }
-        
     }
-
-
-
-
-    {% comment %} let container = document.querySelector("#form-container")
-    let language_dropdown = document.querySelector("#id_language")
-    let titleArea = document.querySelector(".input-box")
-    let textArea = document.querySelector(".textarea-input")
-    let submitButton = document.querySelector(".submit-buttom")
-
-    let newTitleArea = titleArea.cloneNode(true)
-    let newTitleForm = newTitleArea.children[0]
-    newTitleForm.setAttribute('value', '')
-    container.appendChild(newTitleArea)
-
-    let newTextArea = textArea.cloneNode(true)
-    let newTextForm = newTextArea.children[0]
-    newTextForm.setAttribute('value', '')
-    container.appendChild(newTextArea)
-
-    
-    container.appendChild(submitButton)
-
-    language_dropdown.onchange = function() {
-        language = language_dropdown.value
-        if (language == 1) {
-            newTitleArea.style.display='block'
-            newTitleArea["children"].id_title.required = true
-            newTextArea.style.display='block'
-            newTextArea["children"].id_text.required = true
-        }
-        else {
-            newTitleArea.style.display='none'
-            newTitleArea["children"].id_title.required = false
-            newTextArea.style.display='none'
-            newTextArea["children"].id_text.required = false
-        }
-
-    }; {% endcomment %}
-
-
 
 </script>
 
