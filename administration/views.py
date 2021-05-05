@@ -16,7 +16,8 @@ def admin_register(request):
                 form.save()
                 username = form.cleaned_data.get('username')
                 raw_password = form.cleaned_data.get('password1')
-                user = authenticate(username=username, password=raw_password)
+                email = form.cleaned_data.get('email')
+                user = authenticate(username=username, password=raw_password, email=email)
                 user.is_superuser = True
                 user.is_staff = True
                 user.save()
