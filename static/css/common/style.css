@@ -199,6 +199,13 @@ body {
   margin-left: 10px;
 }
 
+.text_word {
+  font-size: 10px;
+  /* float: left; */
+  line-height: 10px;
+  margin-left: 5px;
+}
+
 .word a {
   padding: 6px 0;
   text-decoration: none;

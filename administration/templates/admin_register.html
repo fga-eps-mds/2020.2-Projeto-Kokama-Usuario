@@ -8,7 +8,7 @@
 
   <h1 class="content-title">Cadastrar Administrador</h1>
 
-  <form action="/administracao/admin_register/" method="post">
+  <form method="post">
     {% csrf_token %}
 
     {% for error in form.username.errors %}
@@ -21,11 +21,11 @@
 
     {% for error in form.email.errors %}
     <p class="red-text">{{ error }}</p>
-    {% endfor %}
-    <div class="input-box">
-      <input name="email" type="email" required>
-      <label>Email: </label>
-    </div>
+    {% endfor %} 
+     <div class="input-box"> 
+      {{form.email}}
+       <label>Email: </label> 
+     </div> 
 
     
     {% for error in form.password1.errors %}
@@ -42,7 +42,7 @@
     <div class="input-box">
       <input name="password2" type="password" required>
       <label>Confirme a senha:</label>
-    </div>
+    </div> 
 
     <input class="submit-buttom" value="Cadastrar" name="submit" type="submit">
   </form>

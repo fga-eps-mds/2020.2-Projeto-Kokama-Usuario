@@ -25,6 +25,5 @@ urlpatterns = [
     path('administracao/', include('administration.urls')),
     path('traducao/', include('translate.urls')),
     path('historia/', include('story.urls')),
-    path('password_reset/', views.password_reset_request, name="password_reset")
-
+    # path('password_reset/', views.password_reset_request, name="password_reset")
 ]
