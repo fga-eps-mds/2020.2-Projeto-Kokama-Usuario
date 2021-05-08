@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.template import RequestContext
 from django.views.decorators.http import require_http_methods
 from decouple import config
 import requests
@@ -7,6 +8,7 @@ from .forms import StoryForm
 from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
     HTTP_200_OK,
+    HTTP_400_BAD_REQUEST,
 )
 from rest_framework.response import Response
 from django.core.paginator import Paginator
@@ -45,11 +47,11 @@ def get_search_list(match, query_list):
 @require_http_methods(["GET"])
 def list_story(request):
     if request.user.is_superuser:
-        url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
         try:
-            search_query = request.GET.get('search', '').lower()
+            url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
             response = requests.get(url)
             stories = response.json()
+            search_query = request.GET.get('search', '').lower()
             if search_query != '':
                 search_list = get_search_list(search_query, stories)     
                 stories = search_list.copy()
@@ -65,6 +67,7 @@ def list_story(request):
                 'num_pages': p.num_pages, 
                 'search_query': search_query, 
             })
+
         except Exception:
             return HttpResponse(
                 SERVER_ERROR,
@@ -74,12 +77,14 @@ def list_story(request):
         return redirect('/')
 
 
-@require_http_methods(["GET"])
+
+@require_http_methods(["GET", "DELETE"])
 def delete_story(request, id):
     if request.user.is_superuser:
-        url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
         try:
+            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
             requests.delete(url)
+
             return redirect('/historia/lista_de_historias')
         except Exception:
             return HttpResponse(
@@ -88,7 +93,6 @@ def delete_story(request, id):
             )
     else:
         return redirect('/')
-
 
 def add_story_get(request, id):
     if id:
@@ -100,16 +104,18 @@ def add_story_get(request, id):
                     SERVER_ERROR,
                     status=HTTP_500_INTERNAL_SERVER_ERROR,
                 )
+            else:
+                story = response.json()
+                story_form = StoryForm(data=story)
         except Exception:
             return HttpResponse(
                 SERVER_ERROR,
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
             )
-        story = response.json()
-        story_form = StoryForm(data=story)
     else:
         story_form = StoryForm()
     return render(request, 'add_story.html', { 'story_form': story_form, 'id': id })
+
 
 def add_story_post(request, id):
     story_form = StoryForm(data=request.POST)
