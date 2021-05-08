@@ -14,8 +14,6 @@ import os
 from decouple import config
 from pathlib import Path
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,8 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'rest_framework',
-    
-    
+
+
 
     # External
     'cloudinary_storage',
@@ -73,7 +71,7 @@ ROOT_URLCONF = 'user.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),],'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ], 'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -170,9 +168,14 @@ STATICFILES_DIRS = [
 VERSION = config('VERSION', default='0.0')
 print("config: " + VERSION)
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "kokamakinkinn@gmail.com"
-EMAIL_HOST_PASSWORD = "ftcbtvywbbthodjr"
+# Ao contrário porque não tem um enviromment para quando for produção ainda
+if (ENVIRONMENT != 'DEVELOPMENT'):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST')
+    EMAIL_PORT = config('EMAIL_PORT')
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = False
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
