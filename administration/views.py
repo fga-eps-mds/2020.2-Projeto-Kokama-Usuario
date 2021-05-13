@@ -33,7 +33,7 @@ def admin_register(request):
 @require_http_methods(["GET", "POST"])
 def login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = AuthenticationForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password')
