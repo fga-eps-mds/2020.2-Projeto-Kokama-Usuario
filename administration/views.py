@@ -21,6 +21,8 @@ def admin_register(request):
                 user.is_staff = True
                 user.save()
                 return redirect(WORD_LIST_URL)
+            else:
+                return redirect('/')
         else:
             form = UserCreationForm()
         return render(request, 'admin_register.html', {'form': form})
@@ -41,7 +43,7 @@ def login(request):
                 return redirect(WORD_LIST_URL)
     else:
         if request.user.is_authenticated and request.user.is_superuser:
-                return redirect(WORD_LIST_URL)
+            return redirect(WORD_LIST_URL)
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
