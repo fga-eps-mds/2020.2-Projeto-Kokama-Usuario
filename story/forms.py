@@ -1,17 +1,32 @@
 from django import forms
-from django.core.validators import RegexValidator
 
+REQUIRED_MESSAGE = 'Preencha este campo.'
 
 class StoryForm(forms.Form):
 
-    title = forms.CharField(
+    title_portuguese = forms.CharField(
         label='title',
-        error_messages={'required': 'Preencha este campo.'}
+        required=False,
+        error_messages={'required': REQUIRED_MESSAGE}
     )
     
-    text = forms.CharField(
+    text_portuguese = forms.CharField(
         label='text',
+        required=False,
         widget=forms.Textarea,
-        error_messages={'required': 'Preencha este campo.'}
+        error_messages={'required': REQUIRED_MESSAGE}
+    )
+
+    title_kokama = forms.CharField(
+        label='title',
+        required=False,
+        error_messages={'required': REQUIRED_MESSAGE}
+    )
+    
+    text_kokama = forms.CharField(
+        label='text',
+        required=False,
+        widget=forms.Textarea,
+        error_messages={'required': REQUIRED_MESSAGE}
     )
    
