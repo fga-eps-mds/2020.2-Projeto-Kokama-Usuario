@@ -11,7 +11,7 @@ WORD_LIST_URL = '/traducao/lista_de_palavras/'
 def admin_register(request):
     if request.user.is_superuser:
         if request.method == 'POST':
-            form = UserCreationForm(request.POST)
+            form = UserCreationForm(data=request.POST)
             if form.is_valid():
                 form.save()
                 username = form.cleaned_data.get('username')
