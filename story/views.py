@@ -1,14 +1,10 @@
 from django.shortcuts import render, redirect
-from django.template import RequestContext
 from django.views.decorators.http import require_http_methods
 from decouple import config
 import requests
-from rest_framework.decorators import api_view
 from .forms import StoryForm
 from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
-    HTTP_200_OK,
-    HTTP_400_BAD_REQUEST,
 )
 from rest_framework.response import Response
 from django.core.paginator import Paginator
@@ -45,10 +41,11 @@ def get_search_list(match, query_list):
 
 
 @require_http_methods(["GET"])
-def list_story(request):
+def list_story(request, url=''):
     if request.user.is_superuser:
         try:
-            url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
+            if url != '':
+                url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
             response = requests.get(url)
             stories = response.json()
             search_query = request.GET.get('search', '').lower()
