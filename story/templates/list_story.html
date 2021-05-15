@@ -21,7 +21,17 @@
         <div class="word-list">
             {% for story in page %}
             <div class="word-area">
-                <span class="word"><a href="/historia/adicionar_historia/{{story.id}}">{{ story.title }}</a></span>
+                <span class="word">
+                    <a href="/historia/adicionar_historia/{{story.id}}">
+                        {% if story.title_portuguese != '' and story.title_kokama != '' %}
+                            {{story.title_portuguese}} - {{story.title_kokama}}
+                        {% elif story.title_portuguese != '' %}
+                            {{story.title_portuguese}}
+                        {% else %}
+                            {{story.title_kokama}}
+                        {% endif %}
+                    </a>
+                </span>
                 <a href="/historia/lista_de_historias/{{story.id}}/delete" onclick="return confirm('Tem certeza que deseja executar essa operação? Ela não pode ser desfeita!');">
                     <em class="fas fa-trash"></em>
                 </a>

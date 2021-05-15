@@ -14,7 +14,7 @@ WORD_LIST_URL = '/traducao/lista_de_palavras/'
 def admin_register(request):
     if request.user.is_superuser:
         if request.method == 'POST':
-            form = UserCreationForm(request.POST)
+            form = UserCreationForm(data=request.POST)
             if form.is_valid():
                 form.save()
                 username = form.cleaned_data.get('username')
@@ -26,6 +26,8 @@ def admin_register(request):
                 user.is_staff = True
                 user.save()
                 return redirect(WORD_LIST_URL)
+            else:
+                return redirect('/')
         else:
             form = UserCreationForm()
         return render(request, 'admin_register.html', {'form': form})
@@ -36,7 +38,7 @@ def admin_register(request):
 @require_http_methods(["GET", "POST"])
 def login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = AuthenticationForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password')

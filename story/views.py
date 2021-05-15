@@ -1,14 +1,10 @@
 from django.shortcuts import render, redirect
-from django.template import RequestContext
 from django.views.decorators.http import require_http_methods
 from decouple import config
 import requests
-from rest_framework.decorators import api_view
 from .forms import StoryForm
 from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
-    HTTP_200_OK,
-    HTTP_400_BAD_REQUEST,
 )
 from rest_framework.response import Response
 from django.core.paginator import Paginator
@@ -18,26 +14,38 @@ STORY_LIST_URL = 'ensino/lista_de_historias'
 SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
 
+def is_word_in_title(match, title_list):
+    for title in title_list:
+        if match.lower() in title.lower():
+            return True
+    return False
 
+def is_word_in_text(match, text):
+    for word in text.split(",.?!;() "):
+        if match.lower() in word.lower():
+            return True
+    return False
 
 def get_search_list(match, query_list):
     search_list = []
     for story in query_list:
-        if match.lower() in story['title'].lower():
+        if is_word_in_title(match, [story['title_portuguese'], story['title_kokama']]):
             search_list.append(story)
         else:
-            for word in story['text'].split(",.?!;()"):
-                if match.lower() in word.lower():
-                    search_list.append(story)
-                    break
+            if is_word_in_text(match, story['text_portuguese']):
+                search_list.append(story)
+            elif is_word_in_text(match, story['text_kokama']):
+                search_list.append(story)
+
     return search_list
 
 
 @require_http_methods(["GET"])
-def list_story(request):
+def list_story(request, url=''):
     if request.user.is_superuser:
         try:
-            url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
+            if url != '':
+                url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
             response = requests.get(url)
             stories = response.json()
             search_query = request.GET.get('search', '').lower()
@@ -88,8 +96,14 @@ def add_story_get(request, id):
         try:
             url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
             response = requests.get(url)
-            story = response.json()
-            story_form = StoryForm(data=story)
+            if response.status_code != HTTP_200_OK:
+                return HttpResponse(
+                    SERVER_ERROR,
+                    status=HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+            else:
+                story = response.json()
+                story_form = StoryForm(data=story)
         except Exception:
             return HttpResponse(
                 SERVER_ERROR,
@@ -106,10 +120,20 @@ def add_story_post(request, id):
         try:
             if id:
                 url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
-                requests.put(url, data=request.POST)
+                response = requests.put(url, data=request.POST)
+                if response.status_code != HTTP_200_OK:
+                    return HttpResponse(
+                        SERVER_ERROR,
+                        status=HTTP_500_INTERNAL_SERVER_ERROR,
+                    )
             else:
                 url = '{base_url}/{parameter}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
-                requests.post(url, data=request.POST)
+                response = requests.post(url, data=request.POST)
+                if response.status_code != HTTP_200_OK:
+                    return HttpResponse(
+                        SERVER_ERROR,
+                        status=HTTP_500_INTERNAL_SERVER_ERROR,
+                    )
         except Exception:
             return HttpResponse(
                 SERVER_ERROR,
