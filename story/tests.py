@@ -23,25 +23,31 @@ class GetSearchListTest(TestCase):
 
         self.story_list = [
             {
-                'title': 'titulo A1',
-                'text': 'text C1'
+                'title_portuguese': 'titulo portugues A1',
+                'text_portuguese': 'text portugues C1',
+                'title_kokama': 'titulo kokama B1',
+                'text_kokama': 'text kokama C1'
             },
             {
-                'title': 'titulo A2',
-                'text': 'text D1'
+                'title_portuguese': 'titulo portugues A1',
+                'text_portuguese': 'text portugues D1',
+                'title_kokama': 'titulo kokama A2',
+                'text_kokama': 'text kokama D1'
             },
             {
-                'title': 'titulo B1',
-                'text': 'text C2'
+                'title_portuguese': 'titulo portugues B1',
+                'text_portuguese': 'text portugues C2',
+                'title_kokama': 'titulo kokama B1',
+                'text_kokama': 'text kokama C2'
             },
         ]
 
     def test_get_search_list(self):
         
-        filtered_list = get_search_list('A', self.story_list)
+        filtered_list = get_search_list('A1', self.story_list)
         self.assertListEqual(filtered_list, [ self.story_list[0], self.story_list[1] ])
 
-        filtered_list = get_search_list('C', self.story_list)
+        filtered_list = get_search_list('B1', self.story_list)
         self.assertListEqual(filtered_list, [ self.story_list[0], self.story_list[2] ])
 
         filtered_list = get_search_list('J', self.story_list)

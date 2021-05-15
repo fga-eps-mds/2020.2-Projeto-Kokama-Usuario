@@ -18,13 +18,14 @@ class AdministrationConfigTest(TestCase):
 class AdminRegisterTest(TestCase):
 
     def setUp(self):
-        
-        user = User.objects.create_user('test', 'test@test.com', 'test_password')
-        self.request_superuser = self.client.request()
-        self.request_superuser.method = 'GET'
-        self.request_superuser.user = user
 
         self.factory = RequestFactory()
+        
+        user = User.objects.create_user('test', 'test@test.com', 'test_password')
+        self.request_superuser = self.factory.get('/')
+        self.request_superuser.user = user
+
+        
         self.request_is_post = self.factory.post('/')
         self.request_is_post.user = user
 
@@ -45,7 +46,7 @@ class AdminRegisterTest(TestCase):
         # Not superuser
         response = admin_register(self.request_superuser)
         response.client = Client()
-        SimpleTestCase.assertRedirects(self, response=response, expected_url='/', status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+        SimpleTestCase.assertRedirects(self, response=response, expected_url='/', status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=False)
 
         # Post
         ## Form not valid
@@ -57,7 +58,7 @@ class AdminRegisterTest(TestCase):
         ## Form valid
         response = admin_register(self.request_form_is_valid)
         response.client = Client()
-        SimpleTestCase.assertRedirects(self, response=response, expected_url='/traducao/lista_de_palavras/', status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=False)
+        SimpleTestCase.assertRedirects(self, response=response, expected_url='/', status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=False)
 
         # Get
         response = admin_register(self.request_is_get)
