@@ -5,8 +5,8 @@ import requests
 from .forms import StoryForm
 from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
+    HTTP_200_OK,
 )
-from rest_framework.response import Response
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 
@@ -44,7 +44,7 @@ def get_search_list(match, query_list):
 def list_story(request, url=''):
     if request.user.is_superuser:
         try:
-            if url != '':
+            if url == '':
                 url = '{base_url}/{parameter}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL)
             response = requests.get(url)
             stories = response.json()
