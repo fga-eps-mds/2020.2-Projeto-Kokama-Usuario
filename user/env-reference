@@ -14,4 +14,4 @@ LEARN_MICROSERVICE_URL=http://IP:8001
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "kokamakinkinn@gmail.com"
-EMAIL_HOST_PASSWORD = "qjfjrsjplyozshxe"
+EMAIL_HOST_PASSWORD = "senhaDoEmail"
