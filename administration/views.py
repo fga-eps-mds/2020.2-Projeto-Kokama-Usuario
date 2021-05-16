@@ -68,7 +68,7 @@ def logout(request):
     return redirect('/administracao/login/')
 
 
-
+@require_http_methods(["GET", "POST"])
 def password_reset_request(request):
 	if request.method == "POST":
 		password_reset_form = PasswordResetForm(request.POST)
