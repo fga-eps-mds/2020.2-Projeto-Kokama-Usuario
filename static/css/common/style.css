@@ -147,6 +147,7 @@ body {
   border-radius: 5px;
   margin-top: 20px;
   transition: 0.35s;
+  font-size: 15px;
 }
 
 .submit-buttom:hover, .button-link:hover {
@@ -293,6 +294,20 @@ body {
   border: 1px solid #f23232;
   color: #000000;
 }
+
+.center {
+  margin-top: 30px;
+  text-align: center;
+}
+.center a {
+  text-decoration: none;
+  color: rgb(90, 172, 248);
+}
+
+.center a:hover {
+  text-decoration: underline;
+}
+
 
 .page {
   float: right;
