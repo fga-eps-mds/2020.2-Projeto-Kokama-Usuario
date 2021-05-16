@@ -198,16 +198,12 @@ body {
 
 .word {
   font-size: 20px;
-  /* float: left; */
   line-height: 40px;
   margin-left: 10px;
 }
 
 .text_word {
-  font-size: 10px;
-  /* float: left; */
-  line-height: 10px;
-  margin-left: 5px;
+  font-size: 12px;
 }
 
 .word a {
