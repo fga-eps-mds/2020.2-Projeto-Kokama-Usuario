@@ -11,3 +11,7 @@ API_KEY=claudinhoApi
 API_SECRET=claudinhoSecret
 TRANSLATE_MICROSERVICE_URL=http://IP:8000
 LEARN_MICROSERVICE_URL=http://IP:8001
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "kokama@Email"
+EMAIL_HOST_PASSWORD = "senhaDoEmail"

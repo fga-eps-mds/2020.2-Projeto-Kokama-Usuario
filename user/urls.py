@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
 from administration.views import login
+from administration import views
 
 urlpatterns = [
     path('', login, name='login'),
@@ -24,4 +25,5 @@ urlpatterns = [
     path('administracao/', include('administration.urls')),
     path('traducao/', include('translate.urls')),
     path('historia/', include('story.urls')),
+    # path('password_reset/', views.password_reset_request, name="password_reset")
 ]

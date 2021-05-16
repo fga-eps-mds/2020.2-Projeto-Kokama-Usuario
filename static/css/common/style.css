@@ -147,6 +147,7 @@ body {
   border-radius: 5px;
   margin-top: 20px;
   transition: 0.35s;
+  font-size: 15px;
 }
 
 .submit-buttom:hover, .button-link:hover {
@@ -198,9 +199,12 @@ body {
 
 .word {
   font-size: 20px;
-  /* float: left; */
   line-height: 40px;
   margin-left: 10px;
+}
+
+.text_word {
+  font-size: 12px;
 }
 
 .word a {
@@ -290,6 +294,20 @@ body {
   border: 1px solid #f23232;
   color: #000000;
 }
+
+.center {
+  margin-top: 30px;
+  text-align: center;
+}
+.center a {
+  text-decoration: none;
+  color: rgb(90, 172, 248);
+}
+
+.center a:hover {
+  text-decoration: underline;
+}
+
 
 .page {
   float: right;
