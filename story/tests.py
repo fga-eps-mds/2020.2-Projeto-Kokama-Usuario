@@ -15,7 +15,7 @@ class StoryConfigTest(TestCase):
         self.assertEqual(apps.get_app_config('story').name, 'story')
 
 
-# Views
+# Views.py
 
 class GetSearchListTest(TestCase):
 
