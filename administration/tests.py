@@ -6,7 +6,7 @@ from django.test.testcases import SimpleTestCase
 from requests.models import Response
 from .apps import AdministrationConfig
 from .views import admin_register, login
-from .forms import save
+
 
 class AdministrationConfigTest(TestCase):
 
@@ -96,16 +96,3 @@ class LoginTest(TestCase):
         response = login(self.request_form_is_valid)
         response.client = Client()
         self.assertEqual(response.status_code, 200)
-
-
-# Forms.py
-
-class UserCreationFormTest(TestCase):
-
-    def setUp(self):
-        user = User.objects.create_user('test', 'test@test.com', 'test_password')
-        Save = save.object.create('email')
-
-    def test_save(self):
-        response = email(self.save('email'))
-        self.assertEquals(response.status_code, 200)

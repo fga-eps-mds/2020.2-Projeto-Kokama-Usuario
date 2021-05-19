@@ -5,7 +5,7 @@ from django.test.client import Client
 from django.test.testcases import SimpleTestCase
 
 from .apps import StoryConfig
-from .views import get_search_list, list_story
+from .views import get_search_list, list_story, is_word_in_text
 
 
 class StoryConfigTest(TestCase):
@@ -40,6 +40,12 @@ class GetSearchListTest(TestCase):
                 'title_kokama': 'titulo kokama B1',
                 'text_kokama': 'text kokama C2'
             },
+            {
+                'title_portuguese': 'titulo portugues D1',
+                'text_portuguese': 'banana',
+                'title_kokama': 'titulo kokama D1',
+                'text_kokama': 'panara'
+            },
         ]
 
     def test_get_search_list(self):
@@ -56,6 +62,9 @@ class GetSearchListTest(TestCase):
         filtered_list = get_search_list('G', [])
         self.assertListEqual(filtered_list, [])
 
+    def test_is_word_in_text(self):
+        result = is_word_in_text('banana','era uma vez uma banana')
+        self.assertEquals(result, True)
 
 class StoryTest(TestCase):
 
@@ -66,14 +75,14 @@ class StoryTest(TestCase):
         self.request_superuser = self.client.request()
         self.request_superuser.method = 'GET'
         self.request_superuser.user = user
-
-
     
     def test_list_story(self):
+        # Is not super user
         response = list_story(self.request_superuser, self.mocked_story_list_url)
         response.client = Client()
         SimpleTestCase.assertRedirects(self, response=response, expected_url='/', status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=True)
 
+        # Search query failed
         self.request_superuser.user.is_superuser = True
         response = list_story(self.request_superuser, self.mocked_story_list_url)
         response.client = Client()
