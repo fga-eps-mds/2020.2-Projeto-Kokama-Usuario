@@ -72,7 +72,7 @@ class GetSearchListTest(TestCase):
 class StoryTest(TestCase):
 
     def setUp(self):
-        self.mocked_story_list_url5 = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
+        self.mocked_story_list_url = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
 
         user = User.objects.create_user('test', 'test@test1.com', 'test_password')
         self.request_superuser = self.client.request()
@@ -97,7 +97,7 @@ class DeleteTest(TestCase):
     def setUp(self):
 
         self.factory = RequestFactory()
-        self.mocked_story_list_url2 = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
+        self.mocked_story_list_url = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
 
         user = User.objects.create_user('test', 'test@test2.com', 'test_password')
         self.request_superuser_get = self.factory.get('/')
@@ -129,7 +129,7 @@ class AddStoryPostGetTest(TestCase):
     def setUp(self):
 
         self.factory = RequestFactory()
-        self.mocked_story_list_url3 = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
+        self.mocked_story_list_url = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
         self.mocked_story_url = 'https://60a5c020c0c1fd00175f43c0.mockapi.io/EStory'
 
         user = User.objects.create_user('test', 'test@test3.com', 'test_password')
@@ -167,7 +167,7 @@ class AddStoryTest(TestCase):
     def setUp(self):
 
         self.factory = RequestFactory()
-        self.mocked_story_list_url4 = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
+        self.mocked_story_list_url = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
 
         user = User.objects.create_user('test', 'test@test4.com', 'test_password')
         self.request_superuser_get = self.factory.get('/')
