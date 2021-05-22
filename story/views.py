@@ -13,6 +13,7 @@ from django.http import HttpResponse
 STORY_LIST_URL = 'ensino/lista_de_historias'
 SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
+URL_PATH = '{base_url}/{parameter}/{id}'
 
 def is_word_in_title(match, title_list):
     for title in title_list:
@@ -79,7 +80,7 @@ def delete_story(request, id, url = ''):
     if request.user.is_superuser:
         try:
             if url == '':
-                url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
+                url = URL_PATH.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
             
             requests.delete(url)
             return redirect('/historia/lista_de_historias')
@@ -95,7 +96,7 @@ def add_story_get(request, id, url = ''):
     if id:
         try:
             if url == '':
-                url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
+                url = URL_PATH.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
             
             response = requests.get(url)
             if response.status_code != HTTP_200_OK:
@@ -123,7 +124,7 @@ def add_story_post(request, id, url):
         try:
             if id:
                 if url == '':
-                    url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
+                    url = URL_PATH.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
                 response = requests.put(url, data=request.POST)
                 if response.status_code != HTTP_200_OK:
                     return HttpResponse(
