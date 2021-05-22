@@ -19,7 +19,7 @@ class GetTranslateTest(TestCase):
     def setUp(self):
 
         self.factory = RequestFactory()
-        self.mocked_story_list_url = 'https://60a5c020c0c1fd00175f43c0.mockapi.io/EWord'
+        self.mocked_word_list_url = 'https://60a5c020c0c1fd00175f43c0.mockapi.io/EWord'
 
         user = User.objects.create_user('test', 'test@test.com', 'test_password')
         self.request_superuser_get = self.factory.get('/')
@@ -29,14 +29,14 @@ class GetTranslateTest(TestCase):
     def test_get_word_list(self):
 
         # Is not super user
-        response = get_word_list(self.request_superuser_get, self.mocked_story_list_url)
+        response = get_word_list(self.request_superuser_get, self.mocked_word_list_url)
         response.client = Client()
         SimpleTestCase.assertRedirects(self, response=response, expected_url='/', status_code=302, 
                                         target_status_code=200, msg_prefix='', fetch_redirect_response=True)
 
         # Add is super user GET
         self.request_superuser_get.user.is_superuser = True
-        response = get_word_list(self.request_superuser_get, self.mocked_story_list_url)
+        response = get_word_list(self.request_superuser_get, self.mocked_word_list_url)
         self.assertEquals(response.status_code, 200)
 
     def test_delete_translate(self):

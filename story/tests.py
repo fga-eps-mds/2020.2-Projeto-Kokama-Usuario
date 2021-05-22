@@ -13,6 +13,7 @@ class StoryConfigTest(TestCase):
     def test_apps(self):
         self.assertEqual(StoryConfig.name, 'story')
         self.assertEqual(apps.get_app_config('story').name, 'story')
+        self.mocked_story_list_url = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
 
 
 # Views.py
@@ -72,10 +73,7 @@ class GetSearchListTest(TestCase):
 class StoryTest(TestCase):
 
     def setUp(self):
-        self.mocked_story_list_url = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
-
-        user = User.objects.create_user(
-            'test', 'test@test.com', 'test_password')
+        user = User.objects.create_user('test', 'test@test1.com', 'test_password')
         self.request_superuser = self.client.request()
         self.request_superuser.method = 'GET'
         self.request_superuser.user = user
@@ -98,9 +96,8 @@ class DeleteTest(TestCase):
     def setUp(self):
 
         self.factory = RequestFactory()
-        self.mocked_story_list_url = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
 
-        user = User.objects.create_user('test', 'test@test.com', 'test_password')
+        user = User.objects.create_user('test', 'test@test2.com', 'test_password')
         self.request_superuser_get = self.factory.get('/')
         self.request_superuser = self.factory.delete('/')
         self.request_superuser_get.method = 'GET'
@@ -130,11 +127,9 @@ class AddStoryPostGetTest(TestCase):
     def setUp(self):
 
         self.factory = RequestFactory()
-        self.mocked_story_list_url = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
         self.mocked_story_url = 'https://60a5c020c0c1fd00175f43c0.mockapi.io/EStory'
 
-        user = User.objects.create_user(
-            'test', 'test@test.com', 'test_password')
+        user = User.objects.create_user('test', 'test@test3.com', 'test_password')
         self.request_user_get = self.factory.get('/')
         self.request_user_post = self.factory.post('/')
         self.request_user_get.method = 'GET'
@@ -165,12 +160,13 @@ class AddStoryPostGetTest(TestCase):
 
 
 class AddStoryTest(TestCase):
+
     def setUp(self):
 
         self.factory = RequestFactory()
         self.mocked_story_list_url = 'https://6093298ca7e53a00179508bb.mockapi.io/StoryList'
 
-        user = User.objects.create_user('test', 'test@test.com', 'test_password')
+        user = User.objects.create_user('test', 'test@test4.com', 'test_password')
         self.request_superuser_get = self.factory.get('/')
         self.request_superuser_post = self.factory.post('/')
         self.request_superuser_get.method = 'GET'
