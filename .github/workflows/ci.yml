@@ -27,3 +27,13 @@ jobs:
         python manage.py migrate
         coverage run manage.py test
         coverage report
+        coverage xml
+    - name: Publish tests to Code Climate
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x cc-test-reporter
+        ./cc-test-reporter format-coverage -t coverage.py coverage.xml
+        ./cc-test-reporter upload-coverage
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+
