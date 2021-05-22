@@ -152,10 +152,6 @@ class AddStoryPostGetTest(TestCase):
         response = add_story_get(self.request_user_get, 1, 'wrong_url')
         self.assertEquals(response.status_code, 500)
 
-        # Have correct id and url
-        # response = add_story_get(self.request_user_get, 1, self.mocked_story_url)
-        # self.assertEquals(response.status_code,200)
-
     def test_add_story_post(self):
         # Form valid but without id
         response = add_story_post(
