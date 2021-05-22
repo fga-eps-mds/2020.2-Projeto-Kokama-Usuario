@@ -50,4 +50,4 @@ class GetTranslateTest(TestCase):
         # Add is super user GET
         self.request_superuser_get.user.is_superuser = True
         response = delete_translate(self.request_superuser_get, 1)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 500)
