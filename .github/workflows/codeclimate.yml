@@ -1,4 +1,4 @@
-name: Tests pipeline
+name: Upload tests coverage
 
 # Controls when the action will run. 
 on:
