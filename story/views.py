@@ -13,6 +13,7 @@ from django.http import HttpResponse
 STORY_LIST_URL = 'ensino/lista_de_historias'
 SERVER_ERROR = 'Erro interno do servidor'
 STORIES_PER_PAGE = 25
+URL_PATH = '{base_url}/{parameter}/{id}'
 
 def is_word_in_title(match, title_list):
     for title in title_list:
@@ -74,14 +75,14 @@ def list_story(request, url=''):
         return redirect('/')
 
 
-
 @require_http_methods(["GET", "DELETE"])
-def delete_story(request, id):
+def delete_story(request, id, url = ''):
     if request.user.is_superuser:
         try:
-            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
+            if url == '':
+                url = URL_PATH.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
+            
             requests.delete(url)
-
             return redirect('/historia/lista_de_historias')
         except Exception:
             return HttpResponse(
@@ -91,10 +92,12 @@ def delete_story(request, id):
     else:
         return redirect('/')
 
-def add_story_get(request, id):
+def add_story_get(request, id, url = ''):
     if id:
         try:
-            url = '{base_url}/{parameter}/{id}'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
+            if url == '':
+                url = URL_PATH.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
+            
             response = requests.get(url)
             if response.status_code != HTTP_200_OK:
                 return HttpResponse(
@@ -103,6 +106,7 @@ def add_story_get(request, id):
                 )
             else:
                 story = response.json()
+                print(request)
                 story_form = StoryForm(data=story)
         except Exception:
             return HttpResponse(
@@ -114,12 +118,13 @@ def add_story_get(request, id):
     return render(request, 'add_story.html', { 'story_form': story_form, 'id': id })
 
 
-def add_story_post(request, id):
+def add_story_post(request, id, url):
     story_form = StoryForm(data=request.POST)
     if (story_form.is_valid()):
         try:
             if id:
-                url = '{base_url}/{parameter}/{id}/'.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id = id)
+                if url == '':
+                    url = URL_PATH.format(base_url = config('LEARN_MICROSERVICE_URL'), parameter = STORY_LIST_URL, id=id)
                 response = requests.put(url, data=request.POST)
                 if response.status_code != HTTP_200_OK:
                     return HttpResponse(
@@ -145,11 +150,11 @@ def add_story_post(request, id):
 
 
 @require_http_methods(["GET", "POST"])
-def add_story(request, id):
+def add_story(request, id, url):
     if request.user.is_superuser:
         if request.method == "GET":
             return add_story_get(request, id)
         elif request.method == "POST":
-            return add_story_post(request, id)
+            return add_story_post(request, id, url)
     else:
         return redirect('/')

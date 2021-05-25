@@ -32,9 +32,10 @@ def get_search_query(match, query_list):
 
 # Create your views here.
 @require_http_methods(["GET"])
-def get_word_list(request):
+def get_word_list(request, url):
     if request.user.is_superuser:
-        url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras")
+        if url == '':
+            url = '{base_url}/{parameter}'.format(base_url = config('TRANSLATE_MICROSERVICE_URL'), parameter = "traducao/lista_de_palavras")
         try:
             response = requests.get(url)
             translations = response.json()

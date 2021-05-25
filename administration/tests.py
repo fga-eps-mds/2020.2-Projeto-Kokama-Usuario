@@ -3,8 +3,10 @@ from django.apps import apps
 from django.contrib.auth.models import User
 from django.test.client import Client
 from django.test.testcases import SimpleTestCase
+from requests.models import Response
 from .apps import AdministrationConfig
 from .views import admin_register, login
+
 
 class AdministrationConfigTest(TestCase):
 
